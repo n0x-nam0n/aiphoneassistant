@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Switchboard AI receptionist operations demo" />
+    <title>switchboard · Bella's Kitchen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <section class="splash-screen" id="splash-screen" aria-labelledby="splash-title">
+      <div class="splash-copy">
+        <div class="splash-brand">switchboard<span>.</span></div>
+        <div class="eyebrow">AI PHONE RECEPTION FOR PEOPLE WHO CARE</div>
+        <h1 id="splash-title">Hello has<br /><em>backup.</em></h1>
+        <p>AI answers the call. Your team stays in control.</p>
+        <div class="splash-actions"><button class="primary-btn" id="enter-demo">See the dashboard&nbsp; →</button><button class="splash-link" id="open-contact">Talk about your calls&nbsp; ↗</button></div>
+        <div class="splash-proof"><span>●</span> Human review built in <i>·</i> No false confirmations</div>
+      </div>
+      <div class="splash-visual"><img src="assets/hero-phone.png" alt="Restaurant owner holding a phone with the switchboard dashboard open" /><div class="signal-card"><span class="signal-dot"></span><div><b>AI routing live</b><small>Every call has a safe next step.</small></div></div></div>
+    </section>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <div class="brand">switchboard<span class="brand-dot">.</span></div>
+        <div class="sidebar-kicker">GOOD<br />CONVERSATIONS<br />FILL GREAT<br />TABLES.</div>
+        <nav class="nav-list">
+          <button class="nav-item is-active" data-view="overview"><span class="nav-icon">⌂</span>Overview</button>
+          <button class="nav-item" data-view="inbox"><span class="nav-icon">◡</span>Call inbox <span class="nav-badge">3</span></button>
+          <button class="nav-item" data-view="knowledge"><span class="nav-icon">▱</span>Knowledge</button>
+          <button class="nav-item" data-view="automations"><span class="nav-icon">ϟ</span>Automations</button>
+          <button class="nav-item" data-view="settings"><span class="nav-icon">⚙</span>Settings</button>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="status-pip"><span></span> AI routing live</div>
+          <p>switchboard helps<br />restaurants turn calls<br />into guests.</p>
+        </div>
+      </aside>
+
+      <main class="main-content" id="main-content">
+        <header class="topbar">
+          <div>
+            <div class="restaurant-name">Bella's Kitchen <span class="chevron">⌄</span></div>
+            <div class="restaurant-meta">RESTAURANT <span>·</span> NEW YORK, NY</div>
+          </div>
+          <div class="topbar-actions">
+            <div class="live-indicator"><span></span> AI routing live</div>
+            <div class="topbar-date">Tue, Apr 22, 2025<br /><span>9:14 AM</span></div>
+            <button class="avatar" aria-label="Open profile menu">Z</button>
+          </div>
+        </header>
+
+        <section class="view-panel is-visible" id="overview-view" data-view-panel="overview">
+          <div class="overview-heading">
+            <div>
+              <div class="eyebrow">OVERVIEW</div>
+              <h1>Good morning, Zach</h1>
+              <p class="lede">Your AI receptionist is handling calls, collecting reservation requests, and keeping your team focused on what matters.</p>
+            </div>
+            <div class="health-block">
+              <div class="eyebrow">LIVE CALL HEALTH</div>
+              <div class="health-line"><strong>98%</strong><span>handled<br />successfully</span></div>
+              <div class="health-meta">12 calls in the last hour <span>·</span> 0 missed</div>
+            </div>
+            <button class="primary-btn" id="run-test"><span>⌕</span> Run test call</button>
+          </div>
+
+          <div class="overview-grid">
+            <section class="card how-card">
+              <div class="eyebrow">HOW IT WORKS</div>
+              <div class="flow-row">
+                <div class="flow-step">
+                  <div class="flow-orb orb-teal">◡</div>
+                  <h2>Caller</h2>
+                  <p>A guest calls your<br />restaurant</p>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                  <div class="flow-orb orb-orange">✦</div>
+                  <h2>AI receptionist</h2>
+                  <p>Answers, understands,<br />collects key details</p>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                  <div class="flow-orb orb-yellow">♟</div>
+                  <h2>Human review</h2>
+                  <p>Your team reviews<br />and takes action</p>
+                </div>
+              </div>
+            </section>
+
+            <section class="card guardrail-card">
+              <div class="card-heading"><h2>♢ &nbsp;Safety guardrails</h2><button class="text-btn" id="view-guardrails">View details&nbsp; →</button></div>
+              <div class="guardrail-list">
+                <div class="guardrail"><span class="check">✓</span><div><strong>Never confirms availability</strong><p>Politely takes requests without telling callers if a time is open.</p></div></div>
+                <div class="guardrail"><span class="check">✓</span><div><strong>Escalates allergens</strong><p>Flags allergy mentions for human review.</p></div></div>
+                <div class="guardrail"><span class="check">✓</span><div><strong>Stores requests once</strong><p>Prevents duplicate requests from the same caller.</p></div></div>
+              </div>
+            </section>
+          </div>
+
+          <div class="lower-grid">
+            <section class="card inbox-card">
+              <div class="card-heading inbox-heading"><h2>⌕ &nbsp;Call inbox <span class="count-badge">3</span></h2><button class="text-btn" data-view-target="inbox">View all calls&nbsp; →</button></div>
+              <div class="table-head"><span>CALLER</span><span>PHONE</span><span>REQUEST</span><span>STATUS</span><span>TIME</span><span></span></div>
+              <button class="call-row" data-open-call="maya"><span class="caller">Maya Chen</span><span>(917) 555-0134</span><span class="request">Table for 2 · Fri, Apr 25 · 7:00 PM<small>Celebrating an anniversary</small></span><span><em class="pill pill-review">Pending review</em></span><span>8:56 AM</span><span>•••</span></button>
+              <button class="call-row" data-open-call="jordan"><span class="caller">Jordan Lee</span><span>(646) 555-0178</span><span class="request">Table for 4 · Sat, Apr 26 · 6:30 PM<small>Outdoor seating if possible</small></span><span><em class="pill pill-info">Needs info</em></span><span>8:41 AM</span><span>•••</span></button>
+              <button class="call-row" data-open-call="ari"><span class="caller">Ari Patel</span><span>(212) 555-0199</span><span class="request">Table for 8 · Sat, May 3 · 7:00 PM<small>Birthday dinner</small></span><span><em class="pill pill-large">Large party</em></span><span>8:12 AM</span><span>•••</span></button>
+            </section>
+            <section class="card glance-card">
+              <div class="card-heading"><h2>▥ &nbsp;Today at a glance</h2></div>
+              <div class="glance-list"><div><span>Inbound calls</span><strong>12</strong></div><div><span>Reservation requests</span><strong>9</strong></div><div><span>Transferred to staff</span><strong>2</strong></div><div><span>Handled safely</span><strong>100%</strong></div></div>
+              <div class="glance-quote">More time for<br /><em>what you do best.</em></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view-panel" id="inbox-view" data-view-panel="inbox">
+          <div class="page-heading"><div><div class="eyebrow">CALL INBOX</div><h1>Review every conversation.</h1><p class="lede">Requests are captured once, routed safely, and ready for a human decision.</p></div><button class="primary-btn" id="filter-pending">Show pending only</button></div>
+          <div class="card full-inbox"><div class="inbox-toolbar"><strong>3 open calls</strong><span class="toolbar-note">Last synced just now</span></div>
+            <button class="call-row large-row" data-open-call="maya"><span class="caller">Maya Chen<small>Reservation request</small></span><span>(917) 555-0134</span><span class="request">Table for 2 · Fri, Apr 25 · 7:00 PM<small>Celebrating an anniversary</small></span><span><em class="pill pill-review">Pending review</em></span><span>8:56 AM</span><span>•••</span></button>
+            <button class="call-row large-row" data-open-call="jordan"><span class="caller">Jordan Lee<small>Reservation request</small></span><span>(646) 555-0178</span><span class="request">Table for 4 · Sat, Apr 26 · 6:30 PM<small>Outdoor seating if possible</small></span><span><em class="pill pill-info">Needs info</em></span><span>8:41 AM</span><span>•••</span></button>
+            <button class="call-row large-row" data-open-call="ari"><span class="caller">Ari Patel<small>Reservation request</small></span><span>(212) 555-0199</span><span class="request">Table for 8 · Sat, May 3 · 7:00 PM<small>Birthday dinner</small></span><span><em class="pill pill-large">Large party</em></span><span>8:12 AM</span><span>•••</span></button>
+          </div>
+        </section>
+
+        <section class="view-panel placeholder-view" data-view-panel="knowledge"><div class="eyebrow">KNOWLEDGE</div><h1>Give your receptionist the right answers.</h1><p class="lede">Hours, policies, accessibility, parking, and approved restaurant answers live here.</p><div class="card placeholder-card"><span class="placeholder-icon">▱</span><strong>Knowledge base ready for review</strong><p>12 approved answers · 0 conflicts detected</p></div></section>
+        <section class="view-panel placeholder-view" data-view-panel="automations"><div class="eyebrow">AUTOMATIONS</div><h1>Every response has a safe next step.</h1><p class="lede">Routing, escalation, storage, and notifications stay visible and testable.</p><div class="card placeholder-card"><span class="placeholder-icon">ϟ</span><strong>Reservation intake is active</strong><p>Validate → store → notify → return pending</p></div></section>
+        <section class="view-panel placeholder-view" data-view-panel="settings"><div class="eyebrow">SETTINGS</div><h1>Bella's Kitchen</h1><p class="lede">Production is off. Your staging environment is safe to test.</p><div class="card placeholder-card"><span class="placeholder-icon">⚙</span><strong>Staging environment</strong><p>Notifications disabled · human review required</p></div></section>
+
+        <div class="call-detail" id="call-detail" aria-hidden="true">
+          <div class="detail-backdrop" data-close-call></div>
+          <aside class="detail-panel" aria-labelledby="detail-title">
+            <div class="detail-top"><button class="back-btn" data-close-call>← Back to inbox</button><button class="close-btn" data-close-call aria-label="Close call details">×</button></div>
+            <div class="detail-heading"><div class="eyebrow">CALL BREAKDOWN · 08:56 AM</div><h2 id="detail-title">Maya Chen</h2><p>(917) 555-0134 <span>·</span> 02:18 duration</p><span class="pill pill-review">Pending review</span></div>
+            <div class="detail-section"><div class="section-label">OUTCOME</div><div class="outcome-card"><span class="outcome-icon">✓</span><div><strong>Request received</strong><p>Sent to Bella's Kitchen for review. Not confirmed.</p></div></div></div>
+            <div class="detail-section"><div class="section-label">CALL STRUCTURE</div><div class="timeline">
+              <div class="timeline-item"><span class="timeline-dot teal"></span><div><b>Caller identified</b><small>00:04 · Name and callback number captured</small></div></div>
+              <div class="timeline-item"><span class="timeline-dot orange"></span><div><b>Intent classified</b><small>00:19 · reservation_request</small></div></div>
+              <div class="timeline-item"><span class="timeline-dot yellow"></span><div><b>Details collected</b><small>00:57 · date, time, party size, occasion</small></div></div>
+              <div class="timeline-item"><span class="timeline-dot green"></span><div><b>Safety response returned</b><small>02:11 · human review language used</small></div></div>
+            </div></div>
+            <div class="detail-section"><div class="section-label">EXTRACTED REQUEST</div><div class="field-grid"><div><span>DATE</span><strong>Fri, Apr 25</strong></div><div><span>TIME</span><strong>7:00 PM</strong></div><div><span>PARTY</span><strong>2 guests</strong></div><div><span>OCCASION</span><strong>Anniversary</strong></div></div></div>
+            <div class="detail-section transcript-section"><div class="section-label">TRANSCRIPT</div><div class="transcript"><p><b>AI</b> Thanks for calling Bella's Kitchen. How can I help today?</p><p><b>MAYA</b> Hi, I'd like a table for two this Friday around seven.</p><p><b>AI</b> I can send that request to the restaurant for review. Is there anything else they should know?</p><p><b>MAYA</b> It's our anniversary, so a quieter table would be lovely.</p><p><b>AI</b> Got it. Your request has been sent to the restaurant. It isn't confirmed yet, and the team will follow up with you.</p></div></div>
+            <div class="detail-footer"><button class="secondary-btn" data-close-call>Close review</button><button class="primary-btn">Mark reviewed</button></div>
+          </aside>
+        </div>
+      </main>
+    </div>
+    <div class="contact-modal" id="contact-modal" aria-hidden="true">
+      <div class="contact-backdrop" data-close-contact></div>
+      <section class="contact-panel" aria-labelledby="contact-title">
+        <button class="close-btn contact-close" data-close-contact aria-label="Close contact form">×</button>
+        <div class="eyebrow">START A CONVERSATION</div><h2 id="contact-title">Let’s make sure<br /><em>hello has backup.</em></h2>
+        <p class="contact-intro">Tell us a little about your calls. We’ll show you what a safer, calmer phone line could look like.</p>
+        <form id="contact-form"><label>YOUR NAME<input required name="name" autocomplete="name" placeholder="Zach Estomo" /></label><label>WORK EMAIL<input required type="email" name="email" autocomplete="email" placeholder="zach@bellaskitchen.com" /></label><label>BUSINESS NAME<input required name="business_name" autocomplete="organization" placeholder="Bella's Kitchen" /></label><label>WHAT SHOULD WE KNOW?<textarea name="message" rows="3" placeholder="We miss calls during dinner service..."></textarea></label><button class="primary-btn" type="submit">Send inquiry&nbsp; →</button><p class="form-status" id="form-status" role="status"></p></form>
+      </section>
+    </div>
+    <div class="toast" id="toast" role="status">Test call queued in staging.</div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
