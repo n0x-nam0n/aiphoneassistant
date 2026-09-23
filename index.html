@@ -44,6 +44,15 @@
     .contact-card .button:hover,.contact-card .button:focus-visible{background:#f27e4b}
     @media(max-width:850px){.contact-section{padding:75px 0 85px}.contact-grid{grid-template-columns:1fr;gap:2rem}}
   </style>
+<style id="contact-form-styles">
+    .contact-form{display:grid;gap:12px;margin-top:1.3rem}
+    .contact-form label{display:grid;gap:5px;color:#b6bdb4;font:500 .65rem var(--mono);letter-spacing:.08em;text-transform:uppercase}
+    .contact-form input,.contact-form textarea{width:100%;border:1px solid #4a514a;border-radius:8px;padding:.75rem .8rem;background:#2b322c;color:#fff;font:400 .9rem var(--sans);letter-spacing:0;resize:vertical}
+    .contact-form input::placeholder,.contact-form textarea::placeholder{color:#899189}
+    .contact-form input:focus,.contact-form textarea:focus{outline:2px solid #ff9c70;outline-offset:2px;border-color:#ff9c70}
+    .contact-form .button{border:0;margin-top:.35rem}
+    .form-note{min-height:1.1em;margin:0;color:#b6bdb4;font-size:.76rem}
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -59,10 +68,46 @@
     <section id="contact" class="contact-section" aria-labelledby="contact-title">
         <div class="contact-grid">
           <div><div class="eyebrow">Talk it through</div><h2 id="contact-title">Your missed calls are worth a conversation.</h2><p class="contact-copy">Tell us when the phone gets in the way. We’ll help you figure out whether a managed receptionist is actually worth it for your business.</p></div>
-          <div class="contact-card"><div class="eyebrow">Contact us</div><h3>Let’s talk about your calls.</h3><p>No pressure, no magic demo—just a practical conversation about what your team is missing today.</p><a class="button" href="mailto:hello@restaurantaireceptionist.com?subject=Hostess%20conversation">hello@restaurantaireceptionist.com <span aria-hidden="true">↗</span></a></div>
+          <div class="contact-card"><div class="eyebrow">Contact us</div><h3>Let’s talk about your calls.</h3><p>No pressure, no magic demo—just a practical conversation about what your team is missing today.</p><form class="contact-form" id="contact-form"><label for="contact-name">Your name</label><input id="contact-name" name="name" required autocomplete="name" placeholder="Your name"><label for="contact-business">Business name</label><input id="contact-business" name="business_name" required autocomplete="organization" placeholder="Your business"><label for="contact-email">Email</label><input id="contact-email" name="email" required type="email" autocomplete="email" placeholder="you@business.com"><label for="contact-message">What should we know?</label><textarea id="contact-message" name="message" rows="3" maxlength="2000" placeholder="When are calls hardest to answer?"></textarea><button class="button" type="submit">Send inquiry <span aria-hidden="true">↗</span></button><p class="form-note" id="form-note" role="status"></p></form></div>
         </div>
       </section>
     <footer><span>© 2026 Hostess</span><a href="demo.html">Open the live product demo ↗</a></footer>
   </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+    const contactForm = document.querySelector('#contact-form');
+    const formNote = document.querySelector('#form-note');
+    const supabaseUrl = 'https://frhohipnsqzariwppaxx.supabase.co';
+    contactForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const submit = contactForm.querySelector('button[type="submit"]');
+      const data = Object.fromEntries(new FormData(contactForm).entries());
+      const publishableKey = window.SWITCHBOARD_CONFIG?.publishableKey || '';
+      if (!publishableKey || publishableKey.includes('replace_me')) {
+        formNote.textContent = 'The form is not connected yet. Please try again shortly.';
+        return;
+      }
+      submit.disabled = true;
+      formNote.textContent = 'Sending your information…';
+      try {
+        const client = window.supabase.createClient(supabaseUrl, publishableKey);
+        const { error } = await client.from('contact_submissions').insert({
+          name: data.name,
+          business_name: data.business_name,
+          email: data.email,
+          message: data.message || null
+        });
+        if (error) throw error;
+        contactForm.reset();
+        formNote.textContent = 'Thanks — we received your information and will be in touch.';
+      } catch (error) {
+        console.error('Contact submission failed', error);
+        formNote.textContent = 'We could not submit that yet. Please try again.';
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
