@@ -31,11 +31,24 @@
     @keyframes reveal{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes phone-float{0%,100%{transform:rotate(7deg) translateY(0)}50%{transform:rotate(7deg) translateY(-8px)}}@keyframes note-float{0%,100%{transform:rotate(-7deg) translateY(0)}50%{transform:rotate(-7deg) translateY(-6px)}}@keyframes wave{from{transform:scaleY(.65)}to{transform:scaleY(1.2)}}@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(62,118,85,.28)}70%{box-shadow:0 0 0 7px rgba(62,118,85,0)}100%{box-shadow:0 0 0 0 rgba(62,118,85,0)}}:focus-visible{outline:3px solid rgba(233,105,45,.55);outline-offset:4px}
     @media (max-width:850px){.hero{grid-template-columns:1fr;padding-top:38px}.hero-art{min-height:590px;margin-top:-10px}.proof{align-items:flex-start;flex-direction:column}.steps{grid-template-columns:1fr}.step{min-height:170px}.step h3{margin-top:2.2rem}}@media (max-width:600px){.nav-wrap,.hero,.proof,.how,footer{width:min(100% - 32px,1160px)}.nav{gap:.8rem}.nav a:not(.nav-cta){display:none}h1{font-size:clamp(3.6rem,17vw,5.5rem)}.hero{min-height:auto;padding-bottom:48px}.hero-copy{font-size:1rem}.hero-art{min-height:500px;transform:scale(.82);transform-origin:top center;margin-bottom:-80px}.actions{align-items:flex-start;flex-direction:column;gap:.5rem}.proof-list{flex-wrap:wrap;gap:1rem}.how{padding:75px 0 80px}footer{align-items:flex-start;flex-direction:column;gap:.8rem}}@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
   </style>
+<style id="contact-section-styles">
+    .contact-section{width:min(1160px,calc(100% - 48px));margin:0 auto;padding:100px 0 110px;border-top:1px solid var(--line)}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:end}
+    .contact-section h2{max-width:620px}
+    .contact-copy{max-width:430px;margin-top:1.5rem;color:var(--muted);font-size:1.08rem;line-height:1.55}
+    .contact-card{padding:2rem;border:1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:16px}
+    .contact-card .eyebrow{color:#ffb78e}
+    .contact-card h3{margin:1.1rem 0 .65rem;font:600 1.8rem var(--display);letter-spacing:-.06em}
+    .contact-card p{color:#b6bdb4;max-width:31ch}
+    .contact-card .button{margin-top:1.5rem;background:var(--orange);color:#fff}
+    .contact-card .button:hover,.contact-card .button:focus-visible{background:#f27e4b}
+    @media(max-width:850px){.contact-section{padding:75px 0 85px}.contact-grid{grid-template-columns:1fr;gap:2rem}}
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
   <div class="page">
-    <header><div class="nav-wrap"><a class="wordmark" href="index.html" aria-label="Hostess home"><span class="mark" aria-hidden="true"></span>hostess</a><nav class="nav" aria-label="Primary navigation"><a href="#how-it-works">How it works</a><a href="#proof">For restaurants</a><a class="nav-cta" href="demo.html">Open the demo <span aria-hidden="true">↗</span></a></nav></div></header>
+    <header><div class="nav-wrap"><a class="wordmark" href="index.html" aria-label="Hostess home"><span class="mark" aria-hidden="true"></span>hostess</a><nav class="nav" aria-label="Primary navigation"><a href="#how-it-works">How it works</a><a href="#proof">For restaurants</a><a href="#contact">Contact us</a><a class="nav-cta" href="demo.html">Open the demo <span aria-hidden="true">↗</span></a></nav></div></header>
     <main id="main-content">
       <section class="hero" aria-labelledby="hero-title"><div class="hero-content"><div class="eyebrow reveal">The call is covered</div><h1 id="hero-title" class="reveal delay-1">Hello has <em>backup.</em></h1><p class="hero-copy reveal delay-2">Hostess gives every restaurant call a smart first response—and keeps your team in control of the moments that need a human touch.</p><div class="actions reveal delay-3"><a class="button button-primary" href="#how-it-works">See how it works <span aria-hidden="true">→</span></a><a class="button button-link" href="demo.html">Explore the demo <span aria-hidden="true">↗</span></a></div><p class="fine-print reveal delay-3">Built for busy rooms, real guests, and the calls you cannot afford to miss.</p></div>
         <div class="hero-art" aria-label="A phone showing an incoming restaurant call" role="img"><div class="sun" aria-hidden="true"></div><div class="grain" aria-hidden="true"></div><div class="float-note"><b>AI routing live</b><span> human review ready</span></div><div class="phone"><div class="phone-screen"><div class="phone-status"><span>9:41</span><span>●●●</span></div><div class="phone-brand"><span class="mini-mark" aria-hidden="true"></span>hostess</div><div class="phone-label">incoming call</div><div class="caller">Maya Chen</div><div class="caller-sub">New reservation request</div><div class="call-card"><div class="call-card-top"><span>AI receptionist</span><span>00:48</span></div><strong>Table for 2 · Friday, 7:00 PM</strong><div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><button class="phone-button" type="button">Review request</button></div></div><div class="hand" aria-hidden="true"></div><div class="path" aria-hidden="true"><b>Caller</b><span>→</span><b>AI</b><span>→</span><b>Human</b></div></div>
@@ -43,6 +56,12 @@
       <section id="proof" class="proof" aria-label="Hostess benefits"><p><strong>Less phone tag.</strong><br>More people at the table.</p><div class="proof-list"><span>Never miss a hello</span><span>Human when it matters</span><span>Made for service</span></div></section>
       <section id="how-it-works" class="how" aria-labelledby="how-title"><div class="section-head"><div class="eyebrow">Simple by design</div><h2 id="how-title">Your best calls<br><em>start here.</em></h2></div><div class="steps"><article class="step"><div class="step-num">01 / PICK UP</div><h3>Every ring gets a welcome.</h3><p>Hostess answers quickly, warmly, and in your restaurant’s voice.</p></article><article class="step"><div class="step-num">02 / SORT IT OUT</div><h3>Simple requests stay simple.</h3><p>Menus, hours, directions, and booking requests get handled without slowing down your team.</p></article><article class="step"><div class="step-num">03 / HAND IT OVER</div><h3>The right moments reach you.</h3><p>Allergens, special requests, and anything nuanced arrive with the context you need.</p></article></div></section>
     </main>
+    <section id="contact" class="contact-section" aria-labelledby="contact-title">
+        <div class="contact-grid">
+          <div><div class="eyebrow">Talk it through</div><h2 id="contact-title">Your missed calls are worth a conversation.</h2><p class="contact-copy">Tell us when the phone gets in the way. We’ll help you figure out whether a managed receptionist is actually worth it for your business.</p></div>
+          <div class="contact-card"><div class="eyebrow">Contact us</div><h3>Let’s talk about your calls.</h3><p>No pressure, no magic demo—just a practical conversation about what your team is missing today.</p><a class="button" href="mailto:hello@restaurantaireceptionist.com?subject=Hostess%20conversation">hello@restaurantaireceptionist.com <span aria-hidden="true">↗</span></a></div>
+        </div>
+      </section>
     <footer><span>© 2026 Hostess</span><a href="demo.html">Open the live product demo ↗</a></footer>
   </div>
 </body>
