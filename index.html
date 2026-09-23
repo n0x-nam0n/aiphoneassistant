@@ -53,17 +53,42 @@
     .contact-form .button{border:0;margin-top:.35rem}
     .form-note{min-height:1.1em;margin:0;color:#b6bdb4;font-size:.76rem}
   </style>
+<style id="pricing-section-styles">
+    .pricing-section{width:min(1160px,calc(100% - 48px));margin:0 auto;padding:100px 0 110px;border-top:1px solid var(--line)}
+    .pricing-head{display:flex;justify-content:space-between;align-items:end;gap:2rem}
+    .pricing-head h2{max-width:650px}
+    .pricing-intro{max-width:310px;color:var(--muted);font-size:.95rem}
+    .pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:4rem}
+    .price-card{position:relative;padding:2rem;border:1px solid var(--line);border-radius:16px;background:var(--paper)}
+    .price-card.featured{border-color:var(--orange);background:#fff7ec;box-shadow:0 14px 0 rgba(233,105,45,.13)}
+    .price-badge{position:absolute;right:1.5rem;top:1.5rem;color:var(--orange-dark);font:500 .63rem var(--mono);letter-spacing:.08em;text-transform:uppercase}
+    .price-card h3{margin:1.15rem 0 .5rem;font:600 1.55rem var(--display);letter-spacing:-.06em}
+    .price-card>p{min-height:48px;color:var(--muted);font-size:.92rem}
+    .price{display:flex;align-items:baseline;gap:.45rem;margin:1.7rem 0 1.35rem;font:600 3.2rem var(--display);letter-spacing:-.09em}
+    .price small{color:var(--muted);font:500 .78rem var(--mono);letter-spacing:0}
+    .price-list{display:grid;gap:.7rem;padding:1.25rem 0 0;margin:0;border-top:1px solid var(--line);list-style:none;color:var(--muted);font-size:.88rem}
+    .price-list li{display:flex;gap:.6rem}.price-list li::before{content:'✓';color:var(--green);font-weight:700}
+    .price-card .button{margin-top:1.7rem}
+    @media(max-width:700px){.pricing-section{padding:75px 0 85px}.pricing-head{display:block}.pricing-intro{margin-top:1rem}.pricing-grid{grid-template-columns:1fr;margin-top:2.5rem}}
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
   <div class="page">
-    <header><div class="nav-wrap"><a class="wordmark" href="index.html" aria-label="Hostess home"><span class="mark" aria-hidden="true"></span>hostess</a><nav class="nav" aria-label="Primary navigation"><a href="#how-it-works">How it works</a><a href="#proof">For restaurants</a><a href="#contact">Contact us</a><a class="nav-cta" href="demo.html">Open the demo <span aria-hidden="true">↗</span></a></nav></div></header>
+    <header><div class="nav-wrap"><a class="wordmark" href="index.html" aria-label="Hostess home"><span class="mark" aria-hidden="true"></span>hostess</a><nav class="nav" aria-label="Primary navigation"><a href="#how-it-works">How it works</a><a href="#proof">For restaurants</a><a href="#contact">Contact us</a><a href="#pricing">Pricing</a><a class="nav-cta" href="demo.html">Open the demo <span aria-hidden="true">↗</span></a></nav></div></header>
     <main id="main-content">
       <section class="hero" aria-labelledby="hero-title"><div class="hero-content"><div class="eyebrow reveal">The call is covered</div><h1 id="hero-title" class="reveal delay-1">Hello has <em>backup.</em></h1><p class="hero-copy reveal delay-2">Hostess gives every restaurant call a smart first response—and keeps your team in control of the moments that need a human touch.</p><div class="actions reveal delay-3"><a class="button button-primary" href="#how-it-works">See how it works <span aria-hidden="true">→</span></a><a class="button button-link" href="demo.html">Explore the demo <span aria-hidden="true">↗</span></a></div><p class="fine-print reveal delay-3">Built for busy rooms, real guests, and the calls you cannot afford to miss.</p></div>
         <div class="hero-art" aria-label="A phone showing an incoming restaurant call" role="img"><div class="sun" aria-hidden="true"></div><div class="grain" aria-hidden="true"></div><div class="float-note"><b>AI routing live</b><span> human review ready</span></div><div class="phone"><div class="phone-screen"><div class="phone-status"><span>9:41</span><span>●●●</span></div><div class="phone-brand"><span class="mini-mark" aria-hidden="true"></span>hostess</div><div class="phone-label">incoming call</div><div class="caller">Maya Chen</div><div class="caller-sub">New reservation request</div><div class="call-card"><div class="call-card-top"><span>AI receptionist</span><span>00:48</span></div><strong>Table for 2 · Friday, 7:00 PM</strong><div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><button class="phone-button" type="button">Review request</button></div></div><div class="hand" aria-hidden="true"></div><div class="path" aria-hidden="true"><b>Caller</b><span>→</span><b>AI</b><span>→</span><b>Human</b></div></div>
       </section>
       <section id="proof" class="proof" aria-label="Hostess benefits"><p><strong>Less phone tag.</strong><br>More people at the table.</p><div class="proof-list"><span>Never miss a hello</span><span>Human when it matters</span><span>Made for service</span></div></section>
       <section id="how-it-works" class="how" aria-labelledby="how-title"><div class="section-head"><div class="eyebrow">Simple by design</div><h2 id="how-title">Your best calls<br><em>start here.</em></h2></div><div class="steps"><article class="step"><div class="step-num">01 / PICK UP</div><h3>Every ring gets a welcome.</h3><p>Hostess answers quickly, warmly, and in your restaurant’s voice.</p></article><article class="step"><div class="step-num">02 / SORT IT OUT</div><h3>Simple requests stay simple.</h3><p>Menus, hours, directions, and booking requests get handled without slowing down your team.</p></article><article class="step"><div class="step-num">03 / HAND IT OVER</div><h3>The right moments reach you.</h3><p>Allergens, special requests, and anything nuanced arrive with the context you need.</p></article></div></section>
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+        <div class="pricing-head"><div><div class="eyebrow">Straightforward starting points</div><h2 id="pricing-title">Pricing that earns its keep.</h2></div><p class="pricing-intro">Start with the calls you’re missing. Expand only when the results justify it.</p></div>
+        <div class="pricing-grid">
+          <article class="price-card featured"><div class="price-badge">Best place to start</div><div class="eyebrow">Founding restaurant pilot</div><h3>Prove it in 90 days.</h3><p>A focused pilot for overflow and after-hours calls.</p><div class="price">$299 <small>/ month</small></div><ul class="price-list"><li>$500 one-time setup</li><li>500 included minutes</li><li>Unanswered and after-hours forwarding</li><li>Approved FAQ and request capture</li><li>Human transfers and weekly review</li><li>No direct reservation confirmation</li></ul><a class="button button-primary" href="#contact">Talk about a pilot <span aria-hidden="true">→</span></a></article>
+          <article class="price-card"><div class="eyebrow">Managed restaurant receptionist</div><h3>Make it part of the operation.</h3><p>For teams ready for ongoing optimization and broader call coverage.</p><div class="price">$599 <small>/ month</small></div><ul class="price-list"><li>$1,500 one-time setup</li><li>1,000 included minutes</li><li>Monthly optimization</li><li>Defined overage charge</li><li>Integrations available separately</li><li>Human review stays in control</li></ul><a class="button button-link" href="#contact">Talk through the fit <span aria-hidden="true">↗</span></a></article>
+        </div>
+      </section>
     </main>
     <section id="contact" class="contact-section" aria-labelledby="contact-title">
         <div class="contact-grid">
