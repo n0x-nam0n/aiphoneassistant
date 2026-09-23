@@ -7,6 +7,8 @@
   <meta name="description" content="Hostess gives every restaurant call a smart first response and keeps your team in control of the moments that need a human touch.">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://restaurantaireceptionist.com/">
+  <meta name="author" content="Hostess">
+  <meta property="og:locale" content="en_US">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Hostess">
   <meta property="og:title" content="Hello has backup — Hostess">
@@ -15,12 +17,27 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Hello has backup — Hostess">
   <meta name="twitter:description" content="A smarter, more human way to handle restaurant calls.">
+  <meta name="twitter:url" content="https://restaurantaireceptionist.com/">
   <title>Hello has backup — Hostess</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Hostess","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"AI-assisted call handling for restaurants, with human review when it matters.","url":"https://restaurantaireceptionist.com/","brand":{"@type":"Brand","name":"Hostess"}}
+  {
+    "@context":"https://schema.org",
+    "@graph":[
+      {"@type":"Organization","@id":"https://restaurantaireceptionist.com/#organization","name":"Hostess","url":"https://restaurantaireceptionist.com/","email":"hello@restaurantaireceptionist.com","description":"Managed call handling for restaurants and small businesses, with approved answers and human review when it matters."},
+      {"@type":"WebSite","@id":"https://restaurantaireceptionist.com/#website","url":"https://restaurantaireceptionist.com/","name":"Hostess","publisher":{"@id":"https://restaurantaireceptionist.com/#organization"},"inLanguage":"en-US"},
+      {"@type":"SoftwareApplication","name":"Hostess","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"A managed restaurant AI receptionist that handles approved questions, captures requests and routes important calls to people.","url":"https://restaurantaireceptionist.com/","brand":{"@type":"Brand","name":"Hostess"},"offers":[{"@type":"Offer","name":"Founding Restaurant Pilot","price":"299","priceCurrency":"USD","description":"$500 setup, 500 minutes, unanswered and after-hours forwarding, approved FAQ handling and weekly review."},{"@type":"Offer","name":"Managed Restaurant Receptionist","price":"599","priceCurrency":"USD","description":"$1,500 setup, 1,000 minutes and monthly optimization."}]},
+      {"@type":"FAQPage","mainEntity":[
+        {"@type":"Question","name":"What is a restaurant AI receptionist?","acceptedAnswer":{"@type":"Answer","text":"Hostess is a managed AI receptionist for restaurants. It answers missed, overflow and after-hours calls using information your restaurant approves, captures requests and transfers calls that need a person."}},
+        {"@type":"Question","name":"Can Hostess confirm reservations?","acceptedAnswer":{"@type":"Answer","text":"The initial service captures reservation requests and clearly marks them as pending review. It does not confirm a reservation without authorization from your team or a connected reservation system."}},
+        {"@type":"Question","name":"Will Hostess replace restaurant employees?","acceptedAnswer":{"@type":"Answer","text":"No. Hostess protects employee time by handling overflow and repetitive calls while your staff stays available for guests and decisions requiring human judgment."}},
+        {"@type":"Question","name":"What happens when Hostess does not know an answer?","acceptedAnswer":{"@type":"Answer","text":"The receptionist is restricted to approved information and is configured to transfer or take a message when it is uncertain. High-risk questions such as allergens, safety incidents and payment disputes go to a person."}},
+        {"@type":"Question","name":"How much does a managed restaurant receptionist cost?","acceptedAnswer":{"@type":"Answer","text":"The Founding Restaurant Pilot is $500 setup plus $299 per month for 90 days. The Managed Restaurant Receptionist plan is $1,500 setup plus $599 per month. Integrations are scoped separately."}}
+      ]}
+    ]
+  }
   </script>
   <style>
     :root{--ivory:#f7f0e4;--paper:#fffaf2;--ink:#1d211d;--muted:#6b6e64;--line:rgba(29,33,29,.16);--orange:#e9692d;--orange-dark:#b9481a;--green:#3e7655;--serif:Georgia,'Times New Roman',serif;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--display:'Space Grotesk',var(--sans);--mono:'DM Mono',monospace}
@@ -71,16 +88,30 @@
     .price-card .button{margin-top:1.7rem}
     @media(max-width:700px){.pricing-section{padding:75px 0 85px}.pricing-head{display:block}.pricing-intro{margin-top:1rem}.pricing-grid{grid-template-columns:1fr;margin-top:2.5rem}}
   </style>
+<style id="seo-content-styles">
+    .trust-section,.faq-section{width:min(1160px,calc(100% - 48px));margin:0 auto;padding:100px 0;border-top:1px solid var(--line)}
+    .trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:3.5rem;background:var(--line);border:1px solid var(--line)}
+    .trust-item{padding:1.35rem;background:var(--ivory)}
+    .trust-item strong{display:block;font:600 1.05rem var(--display);letter-spacing:-.04em}
+    .trust-item p{margin-top:.45rem;color:var(--muted);font-size:.82rem}
+    .faq-head{max-width:620px}.faq-list{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem 3rem;margin-top:3.5rem}
+    .faq-item{padding:1.35rem 0;border-top:1px solid var(--line)}
+    .faq-item h3{margin:0;font:600 1.08rem var(--display);letter-spacing:-.04em}
+    .faq-item p{margin-top:.6rem;color:var(--muted);font-size:.9rem;max-width:48ch}
+    @media(max-width:850px){.trust-grid{grid-template-columns:repeat(2,1fr)}.faq-list{grid-template-columns:1fr}}
+    @media(max-width:600px){.trust-section,.faq-section{width:min(100% - 32px,1160px);padding:75px 0 85px}.trust-grid{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
   <div class="page">
-    <header><div class="nav-wrap"><a class="wordmark" href="index.html" aria-label="Hostess home"><span class="mark" aria-hidden="true"></span>hostess</a><nav class="nav" aria-label="Primary navigation"><a href="#how-it-works">How it works</a><a href="#proof">For restaurants</a><a href="#contact">Contact us</a><a href="#pricing">Pricing</a><a class="nav-cta" href="demo.html">Open the demo <span aria-hidden="true">↗</span></a></nav></div></header>
+    <header><div class="nav-wrap"><a class="wordmark" href="index.html" aria-label="Hostess home"><span class="mark" aria-hidden="true"></span>hostess</a><nav class="nav" aria-label="Primary navigation"><a href="#how-it-works">How it works</a><a href="#proof">For restaurants</a><a href="#faq">FAQ</a><a href="#contact">Contact us</a><a href="#pricing">Pricing</a><a class="nav-cta" href="demo.html">Open the demo <span aria-hidden="true">↗</span></a></nav></div></header>
     <main id="main-content">
       <section class="hero" aria-labelledby="hero-title"><div class="hero-content"><div class="eyebrow reveal">The call is covered</div><h1 id="hero-title" class="reveal delay-1">Hello has <em>backup.</em></h1><p class="hero-copy reveal delay-2">Hostess gives every restaurant call a smart first response—and keeps your team in control of the moments that need a human touch.</p><div class="actions reveal delay-3"><a class="button button-primary" href="#how-it-works">See how it works <span aria-hidden="true">→</span></a><a class="button button-link" href="demo.html">Explore the demo <span aria-hidden="true">↗</span></a></div><p class="fine-print reveal delay-3">Built for busy rooms, real guests, and the calls you cannot afford to miss.</p></div>
         <div class="hero-art" aria-label="A phone showing an incoming restaurant call" role="img"><div class="sun" aria-hidden="true"></div><div class="grain" aria-hidden="true"></div><div class="float-note"><b>AI routing live</b><span> human review ready</span></div><div class="phone"><div class="phone-screen"><div class="phone-status"><span>9:41</span><span>●●●</span></div><div class="phone-brand"><span class="mini-mark" aria-hidden="true"></span>hostess</div><div class="phone-label">incoming call</div><div class="caller">Maya Chen</div><div class="caller-sub">New reservation request</div><div class="call-card"><div class="call-card-top"><span>AI receptionist</span><span>00:48</span></div><strong>Table for 2 · Friday, 7:00 PM</strong><div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><button class="phone-button" type="button">Review request</button></div></div><div class="hand" aria-hidden="true"></div><div class="path" aria-hidden="true"><b>Caller</b><span>→</span><b>AI</b><span>→</span><b>Human</b></div></div>
       </section>
       <section id="proof" class="proof" aria-label="Hostess benefits"><p><strong>Less phone tag.</strong><br>More people at the table.</p><div class="proof-list"><span>Never miss a hello</span><span>Human when it matters</span><span>Made for service</span></div></section>
+      <section class="trust-section" aria-labelledby="trust-title"><div class="section-head"><div class="eyebrow">Built for accountable automation</div><h2 id="trust-title">Useful on the<br><em>busy nights.</em></h2></div><div class="trust-grid"><article class="trust-item"><strong>Approved answers only</strong><p>Your team controls the information the receptionist can use.</p></article><article class="trust-item"><strong>Human transfers</strong><p>Nuanced, urgent or uncertain calls reach a person with context.</p></article><article class="trust-item"><strong>Keep your number</strong><p>Start with unanswered, overflow or after-hours forwarding.</p></article><article class="trust-item"><strong>Managed, not magic</strong><p>We configure, test, monitor and improve the call flow with you.</p></article></div></section>
       <section id="how-it-works" class="how" aria-labelledby="how-title"><div class="section-head"><div class="eyebrow">Simple by design</div><h2 id="how-title">Your best calls<br><em>start here.</em></h2></div><div class="steps"><article class="step"><div class="step-num">01 / PICK UP</div><h3>Every ring gets a welcome.</h3><p>Hostess answers quickly, warmly, and in your restaurant’s voice.</p></article><article class="step"><div class="step-num">02 / SORT IT OUT</div><h3>Simple requests stay simple.</h3><p>Menus, hours, directions, and booking requests get handled without slowing down your team.</p></article><article class="step"><div class="step-num">03 / HAND IT OVER</div><h3>The right moments reach you.</h3><p>Allergens, special requests, and anything nuanced arrive with the context you need.</p></article></div></section>
     <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
         <div class="pricing-head"><div><div class="eyebrow">Straightforward starting points</div><h2 id="pricing-title">Pricing that earns its keep.</h2></div><p class="pricing-intro">Start with the calls you’re missing. Expand only when the results justify it.</p></div>
@@ -89,6 +120,7 @@
           <article class="price-card"><div class="eyebrow">Managed restaurant receptionist</div><h3>Make it part of the operation.</h3><p>For teams ready for ongoing optimization and broader call coverage.</p><div class="price">$599 <small>/ month</small></div><ul class="price-list"><li>$1,500 one-time setup</li><li>1,000 included minutes</li><li>Monthly optimization</li><li>Defined overage charge</li><li>Integrations available separately</li><li>Human review stays in control</li></ul><a class="button button-link" href="#contact">Talk through the fit <span aria-hidden="true">↗</span></a></article>
         </div>
       </section>
+      <section id="faq" class="faq-section" aria-labelledby="faq-title"><div class="faq-head"><div class="eyebrow">Questions worth answering</div><h2 id="faq-title">Clear answers<br><em>before launch.</em></h2></div><div class="faq-list"><article class="faq-item"><h3>What is a restaurant AI receptionist?</h3><p>Hostess is a managed AI receptionist for restaurants. It answers missed, overflow and after-hours calls using information your restaurant approves, captures requests and transfers calls that need a person.</p></article><article class="faq-item"><h3>Can Hostess confirm reservations?</h3><p>The initial service captures reservation requests and marks them as pending review. It does not confirm a reservation without authorization from your team or a connected reservation system.</p></article><article class="faq-item"><h3>Will it replace restaurant employees?</h3><p>No. Hostess handles overflow and repetitive calls while your staff stays available for guests and decisions requiring human judgment.</p></article><article class="faq-item"><h3>What if it does not know an answer?</h3><p>It is restricted to approved information and transfers or takes a message when uncertain. Allergens, safety incidents and payment disputes always go to a person.</p></article><article class="faq-item"><h3>How much does it cost?</h3><p>The Founding Restaurant Pilot is $500 setup plus $299 per month for 90 days. The Managed Restaurant Receptionist plan is $1,500 setup plus $599 per month. Integrations are scoped separately.</p></article><article class="faq-item"><h3>Can we start with after-hours calls?</h3><p>Yes. A focused pilot can begin with unanswered, overflow and after-hours calls while your existing number and daytime workflow stay in place.</p></article></div></section>
     </main>
     <section id="contact" class="contact-section" aria-labelledby="contact-title">
         <div class="contact-grid">
