@@ -1,169 +1,49 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Switchboard AI receptionist operations demo" />
-    <title>switchboard · Bella's Kitchen</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <a class="skip-link" href="#main-content">Skip to content</a>
-    <section class="splash-screen" id="splash-screen" aria-labelledby="splash-title">
-      <div class="splash-copy">
-        <div class="splash-brand">switchboard<span>.</span></div>
-        <div class="eyebrow">AI PHONE RECEPTION FOR PEOPLE WHO CARE</div>
-        <h1 id="splash-title">Hello has<br /><em>backup.</em></h1>
-        <p>AI answers the call. Your team stays in control.</p>
-        <div class="splash-actions"><button class="primary-btn" id="enter-demo">See the dashboard&nbsp; →</button><button class="splash-link" id="open-contact">Talk about your calls&nbsp; ↗</button></div>
-        <div class="splash-proof"><span>●</span> Human review built in <i>·</i> No false confirmations</div>
-      </div>
-      <div class="splash-visual"><img src="assets/hero-phone.png" alt="Restaurant owner holding a phone with the switchboard dashboard open" /><div class="signal-card"><span class="signal-dot"></span><div><b>AI routing live</b><small>Every call has a safe next step.</small></div></div></div>
-    </section>
-    <div class="app-shell">
-      <aside class="sidebar" aria-label="Primary navigation">
-        <div class="brand">switchboard<span class="brand-dot">.</span></div>
-        <div class="sidebar-kicker">GOOD<br />CONVERSATIONS<br />FILL GREAT<br />TABLES.</div>
-        <nav class="nav-list">
-          <button class="nav-item is-active" data-view="overview"><span class="nav-icon">⌂</span>Overview</button>
-          <button class="nav-item" data-view="inbox"><span class="nav-icon">◡</span>Call inbox <span class="nav-badge">3</span></button>
-          <button class="nav-item" data-view="knowledge"><span class="nav-icon">▱</span>Knowledge</button>
-          <button class="nav-item" data-view="automations"><span class="nav-icon">ϟ</span>Automations</button>
-          <button class="nav-item" data-view="settings"><span class="nav-icon">⚙</span>Settings</button>
-        </nav>
-        <div class="sidebar-footer">
-          <div class="status-pip"><span></span> AI routing live</div>
-          <p>switchboard helps<br />restaurants turn calls<br />into guests.</p>
-        </div>
-      </aside>
-
-      <main class="main-content" id="main-content">
-        <header class="topbar">
-          <div>
-            <div class="restaurant-name">Bella's Kitchen <span class="chevron">⌄</span></div>
-            <div class="restaurant-meta">RESTAURANT <span>·</span> NEW YORK, NY</div>
-          </div>
-          <div class="topbar-actions">
-            <div class="live-indicator"><span></span> AI routing live</div>
-            <div class="topbar-date">Tue, Apr 22, 2025<br /><span>9:14 AM</span></div>
-            <button class="avatar" aria-label="Open profile menu">Z</button>
-          </div>
-        </header>
-
-        <section class="view-panel is-visible" id="overview-view" data-view-panel="overview">
-          <div class="overview-heading">
-            <div class="heading-copy">
-              <div class="eyebrow">OVERVIEW</div>
-              <h1>Good morning, Zach</h1>
-              <p class="lede">Your AI receptionist is handling calls, collecting reservation requests, and keeping your team focused on what matters.</p>
-              <div class="attention-row"><span><b>3</b> requests need you</span><button class="attention-link" data-view-target="inbox">Review requests&nbsp; →</button></div>
-              <button class="primary-btn" id="run-test"><span>⌕</span> Run test call</button>
-            </div>
-            <div class="overview-actions">
-              <div class="health-block">
-              <div class="eyebrow">LIVE CALL HEALTH</div>
-              <div class="health-line"><strong>98%</strong><span>calls handled<br />safely</span></div>
-              <div class="health-meta">12 calls in the last hour <span>·</span> 0 missed</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="overview-grid">
-            <section class="card how-card">
-              <div class="eyebrow">HOW IT WORKS</div>
-              <div class="flow-row">
-                <div class="flow-step">
-                  <div class="flow-orb orb-teal">◡</div>
-                  <h2>Caller</h2>
-                  <p>A guest calls your<br />restaurant</p>
-                </div>
-                <div class="flow-arrow">→</div>
-                <div class="flow-step">
-                  <div class="flow-orb orb-orange">✦</div>
-                  <h2>AI receptionist</h2>
-                  <p>Answers, understands,<br />collects key details</p>
-                </div>
-                <div class="flow-arrow">→</div>
-                <div class="flow-step">
-                  <div class="flow-orb orb-yellow">♟</div>
-                  <h2>Human review</h2>
-                  <p>Your team reviews<br />and takes action</p>
-                </div>
-              </div>
-            </section>
-
-            <section class="card guardrail-card">
-              <div class="card-heading"><h2>♢ &nbsp;Safety guardrails</h2><button class="text-btn" id="view-guardrails">View details&nbsp; →</button></div>
-              <div class="guardrail-list">
-                <div class="guardrail"><span class="check">✓</span><div><strong>Never confirms availability</strong><p>Politely takes requests without telling callers if a time is open.</p></div></div>
-                <div class="guardrail"><span class="check">✓</span><div><strong>Escalates allergens</strong><p>Flags allergy mentions for human review.</p></div></div>
-                <div class="guardrail"><span class="check">✓</span><div><strong>Stores requests once</strong><p>Prevents duplicate requests from the same caller.</p></div></div>
-              </div>
-            </section>
-          </div>
-
-          <div class="lower-grid">
-            <section class="card inbox-card">
-              <div class="card-heading inbox-heading"><h2>⌕ &nbsp;Call inbox <span class="count-badge">3</span></h2><button class="text-btn" data-view-target="inbox">View all calls&nbsp; →</button></div>
-              <div class="table-head"><span>CALLER</span><span>PHONE</span><span>REQUEST</span><span>STATUS</span><span>TIME</span><span></span></div>
-              <button class="call-row" data-open-call="maya"><span class="caller">Maya Chen</span><span>(917) 555-0134</span><span class="request">Table for 2 · Fri, Apr 25 · 7:00 PM<small>Celebrating an anniversary</small></span><span><em class="pill pill-review">Pending review</em></span><span>8:56 AM</span><span>•••</span></button>
-              <button class="call-row" data-open-call="jordan"><span class="caller">Jordan Lee</span><span>(646) 555-0178</span><span class="request">Table for 4 · Sat, Apr 26 · 6:30 PM<small>Outdoor seating if possible</small></span><span><em class="pill pill-info">Needs info</em></span><span>8:41 AM</span><span>•••</span></button>
-              <button class="call-row" data-open-call="ari"><span class="caller">Ari Patel</span><span>(212) 555-0199</span><span class="request">Table for 8 · Sat, May 3 · 7:00 PM<small>Birthday dinner</small></span><span><em class="pill pill-large">Large party</em></span><span>8:12 AM</span><span>•••</span></button>
-            </section>
-            <section class="card glance-card">
-              <div class="card-heading"><h2>▥ &nbsp;Today at a glance</h2></div>
-              <div class="glance-list"><div><span>Open requests</span><strong>3</strong></div><div><span>Reservation requests</span><strong>9</strong></div><div><span>Transferred to staff</span><strong>2</strong></div><div><span>Calls today</span><strong>12</strong></div></div>
-              <div class="glance-quote">More time for<br /><em>what you do best.</em></div>
-            </section>
-          </div>
-        </section>
-
-        <section class="view-panel" id="inbox-view" data-view-panel="inbox">
-          <div class="page-heading"><div><div class="eyebrow">CALL INBOX</div><h1>Review every conversation.</h1><p class="lede">Requests are captured once, routed safely, and ready for a human decision.</p></div><button class="primary-btn" id="filter-pending">Show pending only</button></div>
-          <div class="card full-inbox"><div class="inbox-toolbar"><strong>3 open calls</strong><span class="toolbar-note">Last synced just now</span></div>
-            <button class="call-row large-row" data-open-call="maya"><span class="caller">Maya Chen<small>Reservation request</small></span><span>(917) 555-0134</span><span class="request">Table for 2 · Fri, Apr 25 · 7:00 PM<small>Celebrating an anniversary</small></span><span><em class="pill pill-review">Pending review</em></span><span>8:56 AM</span><span>•••</span></button>
-            <button class="call-row large-row" data-open-call="jordan"><span class="caller">Jordan Lee<small>Reservation request</small></span><span>(646) 555-0178</span><span class="request">Table for 4 · Sat, Apr 26 · 6:30 PM<small>Outdoor seating if possible</small></span><span><em class="pill pill-info">Needs info</em></span><span>8:41 AM</span><span>•••</span></button>
-            <button class="call-row large-row" data-open-call="ari"><span class="caller">Ari Patel<small>Reservation request</small></span><span>(212) 555-0199</span><span class="request">Table for 8 · Sat, May 3 · 7:00 PM<small>Birthday dinner</small></span><span><em class="pill pill-large">Large party</em></span><span>8:12 AM</span><span>•••</span></button>
-          </div>
-        </section>
-
-        <section class="view-panel placeholder-view" data-view-panel="knowledge"><div class="eyebrow">KNOWLEDGE</div><h1>Give your receptionist the right answers.</h1><p class="lede">Hours, policies, accessibility, parking, and approved restaurant answers live here.</p><div class="card placeholder-card"><span class="placeholder-icon">▱</span><strong>Knowledge base ready for review</strong><p>12 approved answers · 0 conflicts detected</p></div></section>
-        <section class="view-panel placeholder-view" data-view-panel="automations"><div class="eyebrow">AUTOMATIONS</div><h1>Every response has a safe next step.</h1><p class="lede">Routing, escalation, storage, and notifications stay visible and testable.</p><div class="card placeholder-card"><span class="placeholder-icon">ϟ</span><strong>Reservation intake is active</strong><p>Validate → store → notify → return pending</p></div></section>
-        <section class="view-panel placeholder-view" data-view-panel="settings"><div class="eyebrow">SETTINGS</div><h1>Bella's Kitchen</h1><p class="lede">Production is off. Your staging environment is safe to test.</p><div class="card placeholder-card"><span class="placeholder-icon">⚙</span><strong>Staging environment</strong><p>Notifications disabled · human review required</p></div></section>
-
-        <div class="call-detail" id="call-detail" aria-hidden="true">
-          <div class="detail-backdrop" data-close-call></div>
-          <aside class="detail-panel" aria-labelledby="detail-title">
-            <div class="detail-top"><button class="back-btn" data-close-call>← Back to inbox</button><button class="close-btn" data-close-call aria-label="Close call details">×</button></div>
-            <div class="detail-heading"><div class="eyebrow">CALL BREAKDOWN · 08:56 AM</div><h2 id="detail-title">Maya Chen</h2><p>(917) 555-0134 <span>·</span> 02:18 duration</p><span class="pill pill-review">Pending review</span></div>
-            <div class="detail-section"><div class="section-label">OUTCOME</div><div class="outcome-card"><span class="outcome-icon">✓</span><div><strong>Request received</strong><p>Sent to Bella's Kitchen for review. Not confirmed.</p></div></div></div>
-            <div class="detail-section"><div class="section-label">CALL STRUCTURE</div><div class="timeline">
-              <div class="timeline-item"><span class="timeline-dot teal"></span><div><b>Caller identified</b><small>00:04 · Name and callback number captured</small></div></div>
-              <div class="timeline-item"><span class="timeline-dot orange"></span><div><b>Intent classified</b><small>00:19 · reservation_request</small></div></div>
-              <div class="timeline-item"><span class="timeline-dot yellow"></span><div><b>Details collected</b><small>00:57 · date, time, party size, occasion</small></div></div>
-              <div class="timeline-item"><span class="timeline-dot green"></span><div><b>Safety response returned</b><small>02:11 · human review language used</small></div></div>
-            </div></div>
-            <div class="detail-section"><div class="section-label">EXTRACTED REQUEST</div><div class="field-grid"><div><span>DATE</span><strong>Fri, Apr 25</strong></div><div><span>TIME</span><strong>7:00 PM</strong></div><div><span>PARTY</span><strong>2 guests</strong></div><div><span>OCCASION</span><strong>Anniversary</strong></div></div></div>
-            <div class="detail-section transcript-section"><div class="section-label">TRANSCRIPT</div><div class="transcript"><p><b>AI</b> Thanks for calling Bella's Kitchen. How can I help today?</p><p><b>MAYA</b> Hi, I'd like a table for two this Friday around seven.</p><p><b>AI</b> I can send that request to the restaurant for review. Is there anything else they should know?</p><p><b>MAYA</b> It's our anniversary, so a quieter table would be lovely.</p><p><b>AI</b> Got it. Your request has been sent to the restaurant. It isn't confirmed yet, and the team will follow up with you.</p></div></div>
-            <div class="detail-footer"><button class="secondary-btn" data-close-call>Close review</button><button class="primary-btn">Mark reviewed</button></div>
-          </aside>
-        </div>
-      </main>
-    </div>
-    <div class="contact-modal" id="contact-modal" aria-hidden="true">
-      <div class="contact-backdrop" data-close-contact></div>
-      <section class="contact-panel" aria-labelledby="contact-title">
-        <button class="close-btn contact-close" data-close-contact aria-label="Close contact form">×</button>
-        <div class="eyebrow">START A CONVERSATION</div><h2 id="contact-title">Let’s make sure<br /><em>hello has backup.</em></h2>
-        <p class="contact-intro">Tell us a little about your calls. We’ll show you what a safer, calmer phone line could look like.</p>
-        <form id="contact-form"><label>YOUR NAME<input required name="name" autocomplete="name" placeholder="Zach Estomo" /></label><label>WORK EMAIL<input required type="email" name="email" autocomplete="email" placeholder="zach@bellaskitchen.com" /></label><label>BUSINESS NAME<input required name="business_name" autocomplete="organization" placeholder="Bella's Kitchen" /></label><label>WHAT SHOULD WE KNOW?<textarea name="message" rows="3" placeholder="We miss calls during dinner service..."></textarea></label><button class="primary-btn" type="submit">Send inquiry&nbsp; →</button><p class="form-status" id="form-status" role="status"></p></form>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f0e4">
+  <meta name="description" content="Passe gives every restaurant call a smart first response and keeps your team in control of the moments that need a human touch.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://restaurantaireceptionist.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Passe">
+  <meta property="og:title" content="Hello has backup — Passe">
+  <meta property="og:description" content="AI answers the call. Your team stays in control.">
+  <meta property="og:url" content="https://restaurantaireceptionist.com/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Hello has backup — Passe">
+  <meta name="twitter:description" content="A smarter, more human way to handle restaurant calls.">
+  <title>Hello has backup — Passe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Passe","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"AI-assisted call handling for restaurants, with human review when it matters.","url":"https://restaurantaireceptionist.com/","brand":{"@type":"Brand","name":"Passe"}}
+  </script>
+  <style>
+    :root{--ivory:#f7f0e4;--paper:#fffaf2;--ink:#1d211d;--muted:#6b6e64;--line:rgba(29,33,29,.16);--orange:#e9692d;--orange-dark:#b9481a;--green:#3e7655;--serif:Georgia,'Times New Roman',serif;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--display:'Space Grotesk',var(--sans);--mono:'DM Mono',monospace}
+    *,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--ivory);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.5}a{color:inherit}.skip-link{position:absolute;left:1rem;top:-4rem;z-index:5;background:var(--ink);color:#fff;padding:.65rem 1rem;border-radius:999px}.skip-link:focus{top:1rem}.page{overflow:hidden}.nav-wrap,.hero,.proof,.how,footer{width:min(1160px,calc(100% - 48px));margin-inline:auto}header{position:relative;z-index:2}.nav-wrap{display:flex;align-items:center;justify-content:space-between;padding:28px 0}.wordmark{display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;font-family:var(--display);font-weight:700;letter-spacing:-.07em;font-size:1.35rem}.mark{width:25px;height:25px;border:2px solid var(--ink);border-radius:50%;display:inline-grid;place-items:center;position:relative}.mark::before,.mark::after{content:'';position:absolute;width:8px;height:2px;background:var(--ink);left:-6px}.mark::after{left:auto;right:-6px}.nav{display:flex;align-items:center;gap:2rem;font-size:.88rem}.nav a{text-decoration:none;color:var(--muted)}.nav a:hover,.nav a:focus-visible{color:var(--ink)}.nav .nav-cta{border:1px solid var(--ink);border-radius:999px;padding:.65rem 1.05rem;color:var(--ink)}.nav .nav-cta:hover,.nav .nav-cta:focus-visible{background:var(--ink);color:var(--paper)}
+    .hero{min-height:680px;display:grid;grid-template-columns:minmax(0,.96fr) minmax(420px,1.04fr);align-items:center;gap:3rem;padding:56px 0 88px}.eyebrow{display:flex;align-items:center;gap:.65rem;font:500 .7rem var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--orange-dark)}.eyebrow::before{content:'';width:27px;height:1px;background:var(--orange)}h1,h2,p{margin:0}h1{max-width:650px;margin-top:1.25rem;font:600 clamp(4rem,7.4vw,7.3rem)/.9 var(--display);letter-spacing:-.095em}h1 em{color:var(--orange);font-family:var(--serif);font-weight:400;letter-spacing:-.08em}.hero-copy{max-width:500px;margin-top:2rem;color:var(--muted);font-size:1.1rem;line-height:1.55}.actions{display:flex;align-items:center;gap:1rem;margin-top:2rem}.button{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;border:1px solid transparent;border-radius:999px;padding:.9rem 1.3rem;font:600 .92rem var(--sans);text-decoration:none;cursor:pointer;transition:transform .2s ease,background .2s ease,color .2s ease}.button:hover,.button:focus-visible{transform:translateY(-2px)}.button-primary{background:var(--orange);color:#fff;box-shadow:0 8px 20px rgba(185,72,26,.16)}.button-primary:hover,.button-primary:focus-visible{background:var(--orange-dark)}.button-link{color:var(--ink);padding-inline:.3rem}.button-link span{transition:transform .2s ease}.button-link:hover span{transform:translateX(4px)}.fine-print{margin-top:1rem;color:#85887e;font-size:.78rem}
+    .hero-art{position:relative;min-height:540px;display:grid;place-items:center}.sun{position:absolute;width:440px;height:440px;border-radius:50%;background:#efd1a7;opacity:.8}.grain{position:absolute;inset:-12%;opacity:.14;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.34'/%3E%3C/svg%3E");mix-blend-mode:multiply}.phone{position:relative;z-index:1;width:270px;height:510px;border:9px solid #222923;border-radius:39px;background:#f9f6ee;box-shadow:16px 21px 0 rgba(29,33,29,.12),0 30px 50px rgba(101,63,25,.18);transform:rotate(7deg);overflow:hidden;animation:phone-float 5s ease-in-out infinite}.phone::before{content:'';position:absolute;z-index:2;top:-2px;left:50%;width:88px;height:22px;border-radius:0 0 15px 15px;background:#222923;transform:translateX(-50%)}.phone-screen{height:100%;padding:45px 18px 20px;background:linear-gradient(180deg,#f4eadc 0%,#fffaf2 55%)}.phone-status{display:flex;justify-content:space-between;align-items:center;font:500 .6rem var(--mono);color:#73776e}.phone-brand{margin-top:38px;display:flex;align-items:center;gap:6px;font:700 1rem var(--display);letter-spacing:-.06em}.mini-mark{width:17px;height:17px;border:1.5px solid var(--ink);border-radius:50%}.phone-label{margin-top:50px;font:500 .64rem var(--mono);color:var(--orange-dark);text-transform:uppercase;letter-spacing:.12em}.caller{font:600 1.45rem var(--display);letter-spacing:-.06em;margin-top:.5rem}.caller-sub{color:#75796f;font-size:.76rem;margin-top:.2rem}.call-card{margin-top:1.8rem;padding:13px;border:1px solid rgba(29,33,29,.11);border-radius:12px;background:rgba(255,255,255,.65)}.call-card-top{display:flex;justify-content:space-between;font:500 .61rem var(--mono);color:#73776e}.call-card strong{display:block;margin-top:9px;font:600 .92rem var(--display);letter-spacing:-.03em}.wave{display:flex;align-items:center;gap:3px;height:30px;margin-top:18px}.wave i{display:block;width:3px;height:35%;border-radius:5px;background:var(--orange);animation:wave 1s ease-in-out infinite alternate}.wave i:nth-child(2n){animation-delay:-.5s;height:70%}.wave i:nth-child(3n){animation-delay:-.2s;height:48%}.wave i:nth-child(4n){height:85%}.phone-button{margin-top:45px;width:100%;border:0;border-radius:999px;background:var(--ink);color:#fff;padding:11px;font:600 .75rem var(--sans)}.hand{position:absolute;z-index:0;right:1%;bottom:2%;width:250px;height:185px;border-radius:49% 51% 34% 52%;background:#c8845e;transform:rotate(-19deg);box-shadow:inset -12px -15px 0 rgba(119,66,42,.1)}.hand::before{content:'';position:absolute;width:95px;height:45px;right:11px;top:8px;border-radius:80% 20% 30% 70%;background:#c8845e;transform:rotate(-20deg)}.float-note{position:absolute;z-index:2;left:4%;top:15%;padding:.75rem .9rem;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 22px rgba(53,39,20,.08);font:500 .65rem var(--mono);transform:rotate(-7deg);animation:note-float 4s ease-in-out infinite}.float-note b{display:flex;align-items:center;gap:6px;color:var(--green);font-weight:500}.float-note b::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(62,118,85,.12);animation:pulse 2s ease-out infinite}.path{position:absolute;z-index:2;right:-2%;bottom:7%;display:flex;align-items:center;gap:.45rem;padding:.7rem .85rem;border:1px solid var(--line);border-radius:999px;background:rgba(255,250,242,.82);backdrop-filter:blur(10px);font:500 .63rem var(--mono)}.path b{color:var(--orange-dark);font-weight:500}.path span{color:#a2a398}
+    .proof{display:flex;align-items:center;justify-content:space-between;gap:2rem;padding:1.3rem 0 2.7rem;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.proof p{color:var(--muted);font-size:.83rem}.proof strong{color:var(--ink);font-family:var(--display);font-size:1.3rem;letter-spacing:-.04em}.proof-list{display:flex;gap:2.2rem;color:var(--muted);font:500 .7rem var(--mono);text-transform:uppercase;letter-spacing:.08em}.how{padding:100px 0 125px}.section-head{max-width:550px}h2{margin-top:1rem;font:600 clamp(2.6rem,5vw,5rem)/.96 var(--display);letter-spacing:-.085em}h2 em{font-family:var(--serif);font-weight:400}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:4rem;background:var(--line);border:1px solid var(--line)}.step{min-height:220px;padding:1.7rem;background:var(--ivory)}.step-num{color:var(--orange);font:500 .7rem var(--mono)}.step h3{margin:3.6rem 0 .5rem;font:600 1.15rem var(--display);letter-spacing:-.04em}.step p{max-width:25ch;color:var(--muted);font-size:.9rem}footer{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 0 2.5rem;border-top:1px solid var(--line);color:var(--muted);font-size:.78rem}footer a{text-decoration:none}footer a:hover{color:var(--ink)}.reveal{animation:reveal .8s cubic-bezier(.2,.75,.25,1) both}.delay-1{animation-delay:.12s}.delay-2{animation-delay:.22s}.delay-3{animation-delay:.32s}
+    @keyframes reveal{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes phone-float{0%,100%{transform:rotate(7deg) translateY(0)}50%{transform:rotate(7deg) translateY(-8px)}}@keyframes note-float{0%,100%{transform:rotate(-7deg) translateY(0)}50%{transform:rotate(-7deg) translateY(-6px)}}@keyframes wave{from{transform:scaleY(.65)}to{transform:scaleY(1.2)}}@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(62,118,85,.28)}70%{box-shadow:0 0 0 7px rgba(62,118,85,0)}100%{box-shadow:0 0 0 0 rgba(62,118,85,0)}}:focus-visible{outline:3px solid rgba(233,105,45,.55);outline-offset:4px}
+    @media (max-width:850px){.hero{grid-template-columns:1fr;padding-top:38px}.hero-art{min-height:590px;margin-top:-10px}.proof{align-items:flex-start;flex-direction:column}.steps{grid-template-columns:1fr}.step{min-height:170px}.step h3{margin-top:2.2rem}}@media (max-width:600px){.nav-wrap,.hero,.proof,.how,footer{width:min(100% - 32px,1160px)}.nav{gap:.8rem}.nav a:not(.nav-cta){display:none}h1{font-size:clamp(3.6rem,17vw,5.5rem)}.hero{min-height:auto;padding-bottom:48px}.hero-copy{font-size:1rem}.hero-art{min-height:500px;transform:scale(.82);transform-origin:top center;margin-bottom:-80px}.actions{align-items:flex-start;flex-direction:column;gap:.5rem}.proof-list{flex-wrap:wrap;gap:1rem}.how{padding:75px 0 80px}footer{align-items:flex-start;flex-direction:column;gap:.8rem}}@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="page">
+    <header><div class="nav-wrap"><a class="wordmark" href="index.html" aria-label="Passe home"><span class="mark" aria-hidden="true"></span>passe</a><nav class="nav" aria-label="Primary navigation"><a href="#how-it-works">How it works</a><a href="#proof">For restaurants</a><a class="nav-cta" href="demo.html">Open the demo <span aria-hidden="true">↗</span></a></nav></div></header>
+    <main id="main-content">
+      <section class="hero" aria-labelledby="hero-title"><div class="hero-content"><div class="eyebrow reveal">The call is covered</div><h1 id="hero-title" class="reveal delay-1">Hello has <em>backup.</em></h1><p class="hero-copy reveal delay-2">Passe gives every restaurant call a smart first response—and keeps your team in control of the moments that need a human touch.</p><div class="actions reveal delay-3"><a class="button button-primary" href="#how-it-works">See how it works <span aria-hidden="true">→</span></a><a class="button button-link" href="demo.html">Explore the demo <span aria-hidden="true">↗</span></a></div><p class="fine-print reveal delay-3">Built for busy rooms, real guests, and the calls you cannot afford to miss.</p></div>
+        <div class="hero-art" aria-label="A phone showing an incoming restaurant call" role="img"><div class="sun" aria-hidden="true"></div><div class="grain" aria-hidden="true"></div><div class="float-note"><b>AI routing live</b><span> human review ready</span></div><div class="phone"><div class="phone-screen"><div class="phone-status"><span>9:41</span><span>●●●</span></div><div class="phone-brand"><span class="mini-mark" aria-hidden="true"></span>passe</div><div class="phone-label">incoming call</div><div class="caller">Maya Chen</div><div class="caller-sub">New reservation request</div><div class="call-card"><div class="call-card-top"><span>AI receptionist</span><span>00:48</span></div><strong>Table for 2 · Friday, 7:00 PM</strong><div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><button class="phone-button" type="button">Review request</button></div></div><div class="hand" aria-hidden="true"></div><div class="path" aria-hidden="true"><b>Caller</b><span>→</span><b>AI</b><span>→</span><b>Human</b></div></div>
       </section>
-    </div>
-    <div class="toast" id="toast" role="status">Test call queued in staging.</div>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js"></script>
-  </body>
+      <section id="proof" class="proof" aria-label="Passe benefits"><p><strong>Less phone tag.</strong><br>More people at the table.</p><div class="proof-list"><span>Never miss a hello</span><span>Human when it matters</span><span>Made for service</span></div></section>
+      <section id="how-it-works" class="how" aria-labelledby="how-title"><div class="section-head"><div class="eyebrow">Simple by design</div><h2 id="how-title">Your best calls<br><em>start here.</em></h2></div><div class="steps"><article class="step"><div class="step-num">01 / PICK UP</div><h3>Every ring gets a welcome.</h3><p>Passe answers quickly, warmly, and in your restaurant’s voice.</p></article><article class="step"><div class="step-num">02 / SORT IT OUT</div><h3>Simple requests stay simple.</h3><p>Menus, hours, directions, and booking requests get handled without slowing down your team.</p></article><article class="step"><div class="step-num">03 / HAND IT OVER</div><h3>The right moments reach you.</h3><p>Allergens, special requests, and anything nuanced arrive with the context you need.</p></article></div></section>
+    </main>
+    <footer><span>© 2026 Passe · Powered by Soigne</span><a href="demo.html">Open the live product demo ↗</a></footer>
+  </div>
+</body>
 </html>
