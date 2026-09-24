@@ -109,11 +109,24 @@
     @media(max-width:850px){.trust-grid{grid-template-columns:repeat(2,1fr)}.faq-list{grid-template-columns:1fr}}
     @media(max-width:600px){.trust-section,.faq-section{width:min(100% - 32px,1160px);padding:75px 0 85px}.trust-grid{grid-template-columns:1fr}}
   </style>
+<style id="mobile-optimization-styles">
+    .nav-mobile-cta{display:none}
+    @media(max-width:600px){
+      .nav .nav-cta{display:none}
+      .nav a.nav-mobile-cta{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.7rem 1rem;border:1px solid var(--ink);border-radius:999px;color:var(--ink);text-decoration:none;font-size:.84rem}
+      .pricing-section,.contact-section{width:min(100% - 32px,1160px)}
+      .price-card{padding:1.25rem}
+      .price-badge{position:static;display:inline-block;margin-bottom:.8rem}
+      .contact-card{padding:1.25rem}
+      .contact-form input,.contact-form textarea{min-height:48px;font-size:16px}
+      .contact-form .button,.contact-card .button{width:100%;min-height:48px}
+    }
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
   <div class="page">
-    <header><div class="nav-wrap"><a class="wordmark" href="index.html" aria-label="Hostess home"><span class="mark" aria-hidden="true"></span>hostess</a><nav class="nav" aria-label="Primary navigation"><a href="#how-it-works">How it works</a><a href="#proof">For restaurants</a><a href="#faq">FAQ</a><a href="#contact">Contact us</a><a href="#pricing">Pilot</a><a class="nav-cta" href="demo.html">See sample handoff <span aria-hidden="true">↗</span></a></nav></div></header>
+    <header><div class="nav-wrap"><a class="wordmark" href="index.html" aria-label="Hostess home"><span class="mark" aria-hidden="true"></span>hostess</a><nav class="nav" aria-label="Primary navigation"><a href="#how-it-works">How it works</a><a href="#proof">For restaurants</a><a href="#faq">FAQ</a><a href="#contact">Contact us</a><a href="#pricing">Pilot</a><a class="nav-cta" href="demo.html">See sample handoff <span aria-hidden="true">↗</span></a><a class="nav-mobile-cta" href="#contact">Talk to us <span aria-hidden="true">→</span></a></nav></div></header>
     <main id="main-content">
       <section class="hero" aria-labelledby="hero-title"><div class="hero-content"><div class="eyebrow reveal">Overflow call capture</div><h1 id="hero-title" class="reveal delay-1">Missed calls become <em>opportunity.</em></h1><p class="hero-copy reveal delay-2">Hostess catches the restaurant calls your team cannot answer, qualifies private dining, catering, and large-party inquiries, and sends a ready-to-follow-up opportunity to your team.</p><div class="actions reveal delay-3"><a class="button button-primary" href="#contact">Talk through your event calls <span aria-hidden="true">→</span></a><a class="button button-link" href="demo.html">See a sample handoff <span aria-hidden="true">↗</span></a></div><p class="fine-print reveal delay-3">Built for busy rooms, existing phone numbers, and the event inquiries you cannot afford to lose.</p><p class="hero-safeguards reveal delay-3">Callers are told when they’re speaking with an automated assistant. Call recording is off by default.</p></div>
         <div class="hero-art" aria-label="A phone showing a private dining inquiry captured after an unanswered call" role="img"><div class="sun" aria-hidden="true"></div><div class="grain" aria-hidden="true"></div><div class="float-note"><b>Overflow captured</b><span> human follow-up ready</span></div><div class="phone"><div class="phone-screen"><div class="phone-status"><span>9:41</span><span>●●●</span></div><div class="phone-brand"><span class="mini-mark" aria-hidden="true"></span>hostess</div><div class="phone-label">event inquiry</div><div class="caller">Northstar Co.</div><div class="caller-sub">Corporate dinner · 35 guests</div><div class="call-card"><div class="call-card-top"><span>AI intake</span><span>03:12</span></div><strong>Oct 23 · Private dining</strong><div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><button class="phone-button" type="button">Review opportunity</button></div></div><div class="hand" aria-hidden="true"></div><div class="path" aria-hidden="true"><b>Existing number</b><span>→</span><b>AI</b><span>→</span><b>Team</b></div></div>
