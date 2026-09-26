@@ -1,5 +1,7 @@
 # Next Steps — AI Phone Foundation
 
+> **Status: Historical reservation-intake workflow notes.** The current event-lead pilot is governed by [`pilot-contract.md`](pilot-contract.md) and [`restaurant-revenue-desk-build-plan.md`](restaurant-revenue-desk-build-plan.md). Do not interpret the reservation-specific tasks below as the active pilot backlog.
+
 This is a strong session log. The foundation is correctly scoped, and the workflow remains safely unpublished. The most important next step is not notifications or Retell—it is completing every response branch so the webhook always returns a valid caller-safe response.
 
 ## Next work order
@@ -182,4 +184,3 @@ This prevents the agent from saying “I connected you” when the manager never
 ## Next milestone
 
 All five outcomes return correctly, one accepted staging request is stored exactly once, and no branch can falsely confirm a reservation.
-

@@ -1,5 +1,7 @@
 # AI Phone Foundation System — Specification Sheet
 
+> **Status: Future-facing foundation reference.** For the current single-location event-lead pilot, [`pilot-contract.md`](pilot-contract.md) is authoritative. Reuse only compatible tenant-isolation and caller-safety constraints; do not expand the pilot into the general multi-business router described here.
+
 ## Recommended architecture
 
 ```text
@@ -247,4 +249,3 @@ Webhook
 ```
 
 The validator and accepted-only storage gate are saved in the unpublished draft. Supabase is connected using a custom `reservation_requests` table name. Live database and notification tests remain intentionally skipped until schema mapping and destinations are verified.
-

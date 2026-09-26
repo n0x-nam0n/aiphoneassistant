@@ -1,5 +1,7 @@
 # Pilot Readiness Gaps
 
+> **Status: Source gap inventory.** The current scope and release order are in [`restaurant-revenue-desk-build-plan.md`](restaurant-revenue-desk-build-plan.md); event-lead caller/data behavior is defined in [`pilot-contract.md`](pilot-contract.md). Reservation-specific items below are references, not permission to broaden the first pilot.
+
 The core intake workflow exists, but several pieces are still needed to turn a clever demo into a dependable business. Work on these before the first pilot.
 
 ## 1. Actual voice-agent configuration
@@ -314,4 +316,3 @@ Postpone:
 The milestone is not “the agent answered a call.” It is:
 
 > A caller reaches the test number, submits a valid reservation request, the request is stored exactly once, the manager is notified, the caller hears that it is pending—not confirmed—and every failure condition safely returns to a human path.
-
