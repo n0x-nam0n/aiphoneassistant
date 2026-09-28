@@ -398,7 +398,11 @@
     const button = document.querySelector('#password-submit');
     button.disabled = true;
     try {
-      const { error } = await client.auth.updateUser({ password });
+      const currentUser = (await client.auth.getUser()).data.user;
+      const { error } = await client.auth.updateUser({
+        password,
+        data: { ...(currentUser?.user_metadata || {}), must_set_password: false }
+      });
       if (error) throw error;
       window.history.replaceState(null, document.title, window.location.pathname);
       message(passwordMessage, 'Password saved. Opening your restaurant desk…');
@@ -425,10 +429,14 @@
         return;
       }
       if (data.session) {
-        if (isInviteFlow || isRecoveryFlow) {
+        const user = (await client.auth.getUser()).data.user;
+        const mustSetPassword = user?.user_metadata?.must_set_password === true;
+        if (isInviteFlow || isRecoveryFlow || mustSetPassword) {
           showPasswordSetup(isInviteFlow
             ? 'You’re invited to the Hostess desk. Choose a password to continue.'
-            : 'Choose a new password to continue.');
+            : mustSetPassword
+              ? 'Choose a password to finish setting up your Hostess desk.'
+              : 'Choose a new password to continue.');
           return;
         }
         try {
