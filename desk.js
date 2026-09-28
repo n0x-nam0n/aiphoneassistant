@@ -380,8 +380,15 @@
       const { error } = await client.auth.resetPasswordForEmail(document.querySelector('#reset-email').value, { redirectTo });
       if (error) throw error;
       message(resetMessage, 'If an account is registered for that email, a reset link is on its way.');
-    } catch {
-      message(resetMessage, 'Could not request a reset link. Check the email and try again.', true);
+    } catch (error) {
+      const status = error?.status || error?.statusCode;
+      if (status === 429 || /rate limit|too many requests/i.test(error?.message || '')) {
+        message(resetMessage, 'A reset link was requested recently. Wait a few minutes, then try again. If you already received a link, use the newest email.', true);
+      } else if (/smtp|email provider|sending email/i.test(error?.message || '')) {
+        message(resetMessage, 'Password reset email delivery is unavailable right now. Contact your Hostess operator for a secure setup link.', true);
+      } else {
+        message(resetMessage, 'Could not send a reset link right now. Check your connection or contact your Hostess operator for a secure setup link.', true);
+      }
     } finally {
       button.disabled = false;
     }
