@@ -20,7 +20,12 @@
   const resetMessage = document.querySelector('#reset-message');
   const passwordMessage = document.querySelector('#password-message');
   const states = ['New', 'Contacted', 'Qualified', 'Won', 'Lost'];
-  const authMode = new URLSearchParams(window.location.search).get('mode');
+  const queryParams = new URLSearchParams(window.location.search);
+  const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  const authMode = queryParams.get('mode');
+  const authType = queryParams.get('type') || hashParams.get('type');
+  const isInviteFlow = authMode === 'invite' || authType === 'invite';
+  const isRecoveryFlow = authMode === 'reset' || authType === 'recovery';
   let client = null;
   let activeLocation = null;
   let leads = [];
@@ -29,6 +34,24 @@
   function message(target, value, isError = false) {
     target.textContent = value;
     target.classList.toggle('is-error', isError);
+  }
+
+  function showPasswordSetup(value = 'Set a password to finish opening your restaurant desk.') {
+    loginPanel.hidden = false;
+    deskContent.hidden = true;
+    loginForm.hidden = true;
+    resetRequestForm.hidden = true;
+    newPasswordForm.hidden = false;
+    message(passwordMessage, value);
+  }
+
+  function showInviteProblem(value) {
+    loginPanel.hidden = false;
+    deskContent.hidden = true;
+    loginForm.hidden = false;
+    resetRequestForm.hidden = true;
+    newPasswordForm.hidden = true;
+    message(loginMessage, value, true);
   }
 
   function makeCell(className, text) {
@@ -390,22 +413,22 @@
   if (window.supabase && publishableKey && !publishableKey.includes('replace_me')) {
     client = window.supabase.createClient(supabaseUrl, publishableKey);
     client.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && authMode === 'invite')) {
-        loginPanel.hidden = false;
-        deskContent.hidden = true;
-        loginForm.hidden = true;
-        resetRequestForm.hidden = true;
-        newPasswordForm.hidden = false;
+      if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && (isInviteFlow || isRecoveryFlow))) {
+        showPasswordSetup(isInviteFlow
+          ? 'You’re invited to the Hostess desk. Choose a password to continue.'
+          : 'Choose a new password to continue.');
       }
     });
     client.auth.getSession().then(async ({ data, error }) => {
-      if (!error && data.session) {
-        if (authMode === 'invite') {
-          loginPanel.hidden = false;
-          loginForm.hidden = true;
-          resetRequestForm.hidden = true;
-          newPasswordForm.hidden = false;
-          message(passwordMessage, 'Set a password to finish opening your restaurant desk.');
+      if (error) {
+        if (isInviteFlow) showInviteProblem('This invitation link could not be opened. Request a fresh invitation from your Hostess operator.');
+        return;
+      }
+      if (data.session) {
+        if (isInviteFlow || isRecoveryFlow) {
+          showPasswordSetup(isInviteFlow
+            ? 'You’re invited to the Hostess desk. Choose a password to continue.'
+            : 'Choose a new password to continue.');
           return;
         }
         try {
@@ -414,7 +437,13 @@
           await client.auth.signOut();
           message(loginMessage, loadError.message || 'This account cannot open a restaurant workspace.', true);
         }
+      } else if (isInviteFlow || isRecoveryFlow) {
+        showInviteProblem(isInviteFlow
+          ? 'Your invitation link is missing or expired. Request a fresh invitation from your Hostess operator.'
+          : 'Your password-reset link is missing or expired. Request a new reset link below.');
       }
     });
+  } else if (isInviteFlow || isRecoveryFlow) {
+    showInviteProblem('The desk is not connected yet. Refresh the page or contact your Hostess operator.');
   }
 })();
