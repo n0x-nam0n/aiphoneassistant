@@ -85,7 +85,9 @@ Deno.serve(async (request) => {
   if (quotaError || withinQuota !== true) return json(safeFailure(false));
 
   const requestId = `req_${input.conversationId}`;
-  const callbackPhone = input.callerPhone ?? input.sourceCallerPhone;
+  // Provider-injected caller ID is authoritative. Prefer it over model-extracted
+  // data so demo or guessed numbers cannot overwrite the source caller number.
+  const callbackPhone = input.sourceCallerPhone ?? input.callerPhone;
   if (!callbackPhone) {
     const { error } = await supabase.rpc('record_event_call_outcome', {
       p_organization_id: ORGANIZATION_ID,

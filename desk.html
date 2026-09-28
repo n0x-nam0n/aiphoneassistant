@@ -53,6 +53,7 @@
       </section>
 
       <section id="desk-content" hidden>
+        <p id="test-workspace-notice" class="desk-message" hidden>This is a test workspace. Test calls are hidden unless you choose to show them.</p>
         <section class="summary-row" aria-label="Follow-up summary">
           <article class="summary-cell summary-new"><span class="summary-label">Needs follow-up</span><strong id="new-count">—</strong><span>new inquiries</span></article>
           <article class="summary-cell"><span class="summary-label">Calls this month</span><strong id="month-count">—</strong><span>inbound conversations</span></article>
@@ -64,7 +65,7 @@
             <div><p class="eyebrow">THE SERVICE PASS</p><h2 id="inbox-heading">Your follow-up list</h2></div>
             <div class="section-actions"><label class="search-box"><span class="sr-only">Search inquiries</span><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Find a caller or event"></label><button id="export-csv" class="outline-button" type="button">Export CSV <span aria-hidden="true">↓</span></button></div>
           </div>
-          <div class="filter-row"><label for="status-filter">Show</label><select id="status-filter"><option value="all">All inquiries</option><option value="New">New</option><option value="Contacted">Contacted</option><option value="Qualified">Qualified</option><option value="Won">Won</option><option value="Lost">Lost</option></select><span id="lead-count-label" class="result-count"></span><button id="refresh-data" class="text-button" type="button">Refresh</button></div>
+          <div class="filter-row"><label for="status-filter">Show</label><select id="status-filter"><option value="all">All inquiries</option><option value="New">New</option><option value="Contacted">Contacted</option><option value="Qualified">Qualified</option><option value="Won">Won</option><option value="Lost">Lost</option></select><label class="test-data-toggle"><input id="show-test-data" type="checkbox"> Include test records</label><span id="lead-count-label" class="result-count"></span><button id="refresh-data" class="text-button" type="button">Refresh</button></div>
           <div class="table-scroll">
             <table class="lead-table">
               <thead><tr><th scope="col">Caller / event</th><th scope="col">Requested for</th><th scope="col">Party</th><th scope="col">Opportunity</th><th scope="col">Received</th><th scope="col">Follow-up</th></tr></thead>
@@ -86,6 +87,6 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js?v=20260926"></script>
-  <script src="desk.js?v=20260929"></script>
+  <script src="desk.js?v=20260930"></script>
 </body>
 </html>

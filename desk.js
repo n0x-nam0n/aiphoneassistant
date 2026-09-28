@@ -17,6 +17,7 @@
   const callEmpty = document.querySelector('#call-empty');
   const searchInput = document.querySelector('#search-input');
   const statusFilter = document.querySelector('#status-filter');
+  const showTestData = document.querySelector('#show-test-data');
   const resetMessage = document.querySelector('#reset-message');
   const passwordMessage = document.querySelector('#password-message');
   const states = ['New', 'Contacted', 'Qualified', 'Won', 'Lost'];
@@ -126,7 +127,9 @@
   function renderLeads() {
     const term = searchInput.value.trim().toLocaleLowerCase();
     const selectedStatus = statusFilter.value;
+    const includeTest = showTestData.checked;
     const filtered = leads.filter((lead) => {
+      if (lead.is_test && !includeTest) return false;
       const matchesStatus = selectedStatus === 'all' || lead.status === selectedStatus;
       const searchText = [lead.caller_name, lead.caller_phone, lead.caller_email, lead.event_type, lead.notes].join(' ').toLocaleLowerCase();
       return matchesStatus && searchText.includes(term);
@@ -188,7 +191,8 @@
   }
 
   function renderCalls() {
-    const sortedCalls = [...calls].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 12);
+    const visibleCalls = calls.filter((call) => showTestData.checked || !call.is_test);
+    const sortedCalls = visibleCalls.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 12);
     callRows.replaceChildren();
     sortedCalls.forEach((call) => {
       const row = document.createElement('tr');
@@ -218,7 +222,7 @@
     const monthStart = new Date();
     monthStart.setDate(1);
     monthStart.setHours(0, 0, 0, 0);
-    document.querySelector('#month-count').textContent = String(calls.filter((call) => new Date(call.created_at) >= monthStart).length);
+    document.querySelector('#month-count').textContent = String(visibleCalls.filter((call) => new Date(call.created_at) >= monthStart).length);
   }
 
   async function updateLeadStatus(lead, select) {
@@ -250,21 +254,22 @@
 
     const organizationIds = organizations.map((organization) => organization.id);
     const { data: locations, error: locationError } = await client.from('locations')
-      .select('id,organization_id,name,timezone')
+      .select('id,organization_id,name,timezone,is_test')
       .in('organization_id', organizationIds);
     if (locationError) throw locationError;
     if (locations?.length !== 1) throw new Error('This account must be assigned to exactly one restaurant location. Contact your Hostess operator.');
 
     activeLocation = locations[0];
     document.querySelector('#location-name').textContent = activeLocation.name;
+    document.querySelector('#test-workspace-notice').hidden = !activeLocation.is_test;
     document.querySelector('#account-email').textContent = (await client.auth.getUser()).data.user?.email || '';
     [leads, calls] = await Promise.all([
       fetchAllRows(() => client.from('leads')
-        .select('id,request_id,call_id,caller_phone,caller_name,caller_email,event_type,event_date,event_time,party_size,budget_amount,budget_currency,notes,status,created_at')
+        .select('id,request_id,call_id,caller_phone,caller_name,caller_email,event_type,event_date,event_time,party_size,budget_amount,budget_currency,notes,status,is_test,created_at')
         .eq('location_id', activeLocation.id)
         .order('created_at', { ascending: false })),
       fetchAllRows(() => client.from('calls')
-        .select('id,source_call_id,caller_phone,started_at,duration_seconds,outcome,transfer_state,created_at')
+        .select('id,source_call_id,caller_phone,started_at,duration_seconds,outcome,transfer_state,is_test,created_at')
         .eq('location_id', activeLocation.id)
         .order('created_at', { ascending: false }))
     ]);
@@ -287,7 +292,7 @@
     const callById = new Map(calls.map((call) => [call.id, call]));
     const headers = ['request_id', 'created_at', 'caller_name', 'caller_phone', 'caller_email', 'event_type', 'event_date', 'event_time', 'party_size', 'budget_amount', 'budget_currency', 'lead_status', 'call_outcome', 'transfer_state', 'notes'];
     const lines = [headers.map(csvValue).join(',')];
-    leads.forEach((lead) => {
+    leads.filter((lead) => showTestData.checked || !lead.is_test).forEach((lead) => {
       const call = callById.get(lead.call_id) || {};
       const values = [lead.request_id, lead.created_at, lead.caller_name, lead.caller_phone, lead.caller_email, lead.event_type, lead.event_date, lead.event_time, lead.party_size, lead.budget_amount, lead.budget_currency, lead.status, call.outcome, call.transfer_state, lead.notes];
       lines.push(values.map(csvValue).join(','));
@@ -355,6 +360,10 @@
   });
   searchInput.addEventListener('input', renderLeads);
   statusFilter.addEventListener('change', renderLeads);
+  showTestData.addEventListener('change', () => {
+    renderLeads();
+    renderCalls();
+  });
   document.querySelector('#export-csv').addEventListener('click', exportCsv);
 
   document.querySelector('#show-reset').addEventListener('click', () => {
