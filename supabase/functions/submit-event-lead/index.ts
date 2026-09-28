@@ -85,9 +85,9 @@ Deno.serve(async (request) => {
   if (quotaError || withinQuota !== true) return json(safeFailure(false));
 
   const requestId = `req_${input.conversationId}`;
-  // Provider-injected caller ID is authoritative. Prefer it over model-extracted
-  // data so demo or guessed numbers cannot overwrite the source caller number.
-  const callbackPhone = input.sourceCallerPhone ?? input.callerPhone;
+  // Preserve the caller-confirmed callback number separately from provider
+  // caller ID; the database stores both on the call record.
+  const callbackPhone = input.callerPhone ?? input.sourceCallerPhone;
   if (!callbackPhone) {
     const { error } = await supabase.rpc('record_event_call_outcome', {
       p_organization_id: ORGANIZATION_ID,
@@ -130,6 +130,16 @@ Deno.serve(async (request) => {
   });
 
   if (error || !data || typeof data !== 'object') return json(safeFailure(true));
+
+  // The lead RPC writes the callback number. Record provider caller ID in its
+  // separate column so it remains available even when the two numbers differ.
+  await supabase.rpc('record_event_call_outcome', {
+    p_organization_id: ORGANIZATION_ID,
+    p_location_id: LOCATION_ID,
+    p_source_call_id: input.conversationId,
+    p_outcome: 'accepted',
+    p_caller_phone: input.sourceCallerPhone,
+  });
 
   const result = data as CallerResponse;
   const allowedStatuses = new Set(['accepted', 'needs_information', 'duplicate', 'transfer_required', 'not_supported', 'failed']);

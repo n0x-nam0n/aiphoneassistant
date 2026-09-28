@@ -197,8 +197,7 @@
     sortedCalls.forEach((call) => {
       const row = document.createElement('tr');
       const callId = document.createElement('td');
-      callId.className = 'call-ref';
-      appendStacked(callId, call.caller_phone || 'Phone unavailable', call.source_call_id, 'caller-name', 'call-ref');
+      appendStacked(callId, `Caller ID: ${call.source_caller_phone || 'Unavailable'}`, `Callback: ${call.callback_phone || 'Not captured'} · ${call.source_call_id}`, 'caller-name', 'call-ref');
       row.append(callId);
 
       const outcome = document.createElement('td');
@@ -269,7 +268,7 @@
         .eq('location_id', activeLocation.id)
         .order('created_at', { ascending: false })),
       fetchAllRows(() => client.from('calls')
-        .select('id,source_call_id,caller_phone,started_at,duration_seconds,outcome,transfer_state,is_test,created_at')
+        .select('id,source_call_id,source_caller_phone,callback_phone,started_at,duration_seconds,outcome,transfer_state,is_test,created_at')
         .eq('location_id', activeLocation.id)
         .order('created_at', { ascending: false }))
     ]);
