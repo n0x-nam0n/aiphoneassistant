@@ -194,7 +194,7 @@
       const row = document.createElement('tr');
       const callId = document.createElement('td');
       callId.className = 'call-ref';
-      callId.textContent = call.source_call_id;
+      appendStacked(callId, call.caller_phone || 'Phone unavailable', call.source_call_id, 'caller-name', 'call-ref');
       row.append(callId);
 
       const outcome = document.createElement('td');
@@ -264,7 +264,7 @@
         .eq('location_id', activeLocation.id)
         .order('created_at', { ascending: false })),
       fetchAllRows(() => client.from('calls')
-        .select('id,source_call_id,started_at,duration_seconds,outcome,transfer_state,created_at')
+        .select('id,source_call_id,caller_phone,started_at,duration_seconds,outcome,transfer_state,created_at')
         .eq('location_id', activeLocation.id)
         .order('created_at', { ascending: false }))
     ]);
