@@ -96,6 +96,20 @@ function isCalendarDate(value: string): boolean {
     && parsed.getUTCDate() === Number(day);
 }
 
+function resolveEventDate(value: string, timeZone: string, now: Date): string {
+  if (isCalendarDate(value)) return value;
+  const relativeDays: Record<string, number> = {
+    today: 0,
+    tomorrow: 1,
+    'day after tomorrow': 2,
+  };
+  const offset = relativeDays[value.trim().toLocaleLowerCase()];
+  if (offset === undefined) throw new Error('invalid_date');
+  const [year, month, day] = trustedLocalDate(timeZone, now).split('-').map(Number);
+  const localCalendarDay = new Date(Date.UTC(year, month - 1, day + offset));
+  return localCalendarDay.toISOString().slice(0, 10);
+}
+
 export function parseEventLead(body: unknown, timeZone: string, now = new Date()): EventLeadInput {
   if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('invalid_body');
   const record = body as JsonRecord;
@@ -113,8 +127,8 @@ export function parseEventLead(body: unknown, timeZone: string, now = new Date()
   if (callerEmail && !/^[^\s@\r\n]+@[^\s@\r\n]+\.[^\s@\r\n]+$/.test(callerEmail)) throw new Error('invalid_email');
 
   const eventType = optionalString(record.event_type, 120)?.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '') || null;
-  const eventDate = optionalString(record.event_date, 10);
-  if (eventDate && !isCalendarDate(eventDate)) throw new Error('invalid_date');
+  const rawEventDate = optionalString(record.event_date, 40);
+  const eventDate = rawEventDate ? resolveEventDate(rawEventDate, timeZone, now) : null;
   if (eventDate && eventDate < trustedLocalDate(timeZone, now)) throw new Error('past_date');
 
   const eventTime = optionalString(record.event_time, 5);

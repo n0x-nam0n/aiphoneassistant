@@ -26,8 +26,8 @@ function unavailable(): Response {
     status: 'failed',
     action: 'callback_request_not_processed',
     request_id: null,
-    caller_message: 'I could not securely save your request just now. Please try again later.',
-    retry_allowed: true,
+    caller_message: 'I’m sorry, I couldn’t save your request, so I can’t confirm the restaurant received it. I won’t ask you to repeat the details.',
+    retry_allowed: false,
   }, 503);
 }
 

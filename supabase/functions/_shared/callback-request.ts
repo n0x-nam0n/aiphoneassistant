@@ -2,6 +2,7 @@ export type CallbackRequestInput = {
   conversationId: string;
   sourceCallerPhone: string | null;
   callbackPhone: string | null;
+  useSourceCallerId: boolean;
   callerName: string | null;
   details: string | null;
   requestCategory: 'general' | 'large_party' | 'complaint' | 'staff_manager';
@@ -11,6 +12,7 @@ const ALLOWED_KEYS = new Set([
   'conversation_id',
   'source_caller_phone',
   'callback_phone',
+  'use_source_caller_id',
   'caller_name',
   'details',
   'request_category',
@@ -48,7 +50,15 @@ export function parseCallbackRequest(body: unknown): CallbackRequestInput {
   const conversationId = textField(record.conversation_id, 200);
   if (!conversationId || !/^conv_[A-Za-z0-9_-]+$/.test(conversationId)) throw new Error('invalid_conversation');
   const sourceCallerPhone = normalizePhone(textField(record.source_caller_phone, 40));
-  const callbackPhone = normalizePhone(textField(record.callback_phone, 40));
+  if (record.use_source_caller_id !== undefined && typeof record.use_source_caller_id !== 'boolean') {
+    throw new Error('invalid_use_source_caller_id');
+  }
+  const useSourceCallerId = record.use_source_caller_id === true;
+  const suppliedCallbackPhone = normalizePhone(textField(record.callback_phone, 40));
+  if (useSourceCallerId && suppliedCallbackPhone && suppliedCallbackPhone !== sourceCallerPhone) {
+    throw new Error('conflicting_callback_phone');
+  }
+  const callbackPhone = useSourceCallerId ? sourceCallerPhone : suppliedCallbackPhone;
   const callerName = textField(record.caller_name, 160);
   const details = textField(record.details, 2000, true);
   if (!callbackPhone) throw new Error('invalid_callback_phone');
@@ -58,7 +68,7 @@ export function parseCallbackRequest(body: unknown): CallbackRequestInput {
   if (category !== 'general' && category !== 'large_party' && category !== 'complaint' && category !== 'staff_manager') {
     throw new Error('invalid_request_category');
   }
-  return { conversationId, sourceCallerPhone, callbackPhone, callerName, details, requestCategory: category };
+  return { conversationId, sourceCallerPhone, callbackPhone, useSourceCallerId, callerName, details, requestCategory: category };
 }
 
 export function callbackAccepted(requestId: string | null): Record<string, unknown> {
@@ -86,7 +96,7 @@ export function callbackNotificationFailed(requestId: string): Record<string, un
     status: 'notification_failed',
     action: 'callback_saved_notification_failed',
     request_id: requestId,
-    caller_message: 'I have your details, but I could not confirm that the restaurant team was alerted. Please try again later.',
-    retry_allowed: true,
+    caller_message: 'I’ve recorded your details, but I couldn’t confirm that the restaurant team was notified, so I can’t promise a callback.',
+    retry_allowed: false,
   };
 }

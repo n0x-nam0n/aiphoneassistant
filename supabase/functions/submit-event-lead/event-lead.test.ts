@@ -57,6 +57,12 @@ test('trusted date uses the configured location timezone', () => {
   assert.equal(trustedLocalDate('America/Los_Angeles', new Date('2026-09-27T06:30:00Z')), '2026-09-26');
 });
 
+test('resolves relative dates from the trusted local calendar day', () => {
+  assert.equal(parseEventLead({ conversation_id: 'conv_tomorrow', event_date: 'tomorrow' }, 'America/Los_Angeles', NOW).eventDate, '2026-09-28');
+  assert.equal(parseEventLead({ conversation_id: 'conv_day_after', event_date: 'day after tomorrow' }, 'America/Los_Angeles', NOW).eventDate, '2026-09-29');
+  assert.throws(() => parseEventLead({ conversation_id: 'conv_ambiguous', event_date: 'next week' }, 'America/Los_Angeles', NOW), /invalid_date/);
+});
+
 test('constant-time comparison handles equal and unequal lengths', () => {
   assert.equal(constantTimeEqual('secret', 'secret'), true);
   assert.equal(constantTimeEqual('secret', 'secret2'), false);
