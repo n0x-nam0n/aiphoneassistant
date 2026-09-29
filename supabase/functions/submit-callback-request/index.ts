@@ -32,7 +32,10 @@ function unavailable(): Response {
 }
 
 function notificationFailed(requestId: string): Response {
-  return json(callbackNotificationFailed(requestId), 503);
+  // This is a completed tool invocation with an incomplete business outcome:
+  // the callback is stored, but email delivery is unconfirmed. Return 2xx so
+  // ElevenLabs passes the structured status and caller_message to the agent.
+  return json(callbackNotificationFailed(requestId));
 }
 
 Deno.serve(async (request) => {
