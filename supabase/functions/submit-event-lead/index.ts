@@ -5,7 +5,6 @@ import {
   parseEventLead,
   safeFailure,
   sha256,
-  transferRequired,
   type CallerResponse,
 } from '../_shared/event-lead.ts';
 
@@ -98,18 +97,6 @@ Deno.serve(async (request) => {
     });
     if (error) return json(safeFailure(true));
     return json(missingInformation(requestId, ['caller_phone'], 'What phone number should the restaurant use to follow up with you?'));
-  }
-
-  if (input.partySize !== null && input.partySize > 8) {
-    const { error } = await supabase.rpc('record_event_call_outcome', {
-      p_organization_id: ORGANIZATION_ID,
-      p_location_id: LOCATION_ID,
-      p_source_call_id: input.conversationId,
-      p_outcome: 'transfer_required',
-      p_caller_phone: input.sourceCallerPhone,
-    });
-    if (error) return json(safeFailure(true));
-    return json(transferRequired(requestId));
   }
 
   const { data, error } = await supabase.rpc('submit_event_lead', {

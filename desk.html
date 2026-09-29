@@ -37,7 +37,7 @@
         </form>
         <form id="reset-request-form" class="login-card" hidden>
           <h3>Reset your password</h3>
-          <p class="reset-copy">Enter your account email. If it is registered, Supabase will send a secure reset link.</p>
+          <p class="reset-copy">Enter your account email. If the email is registered, we’ll send a secure password-reset link.</p>
           <label for="reset-email">Email</label><input id="reset-email" name="email" type="email" autocomplete="email" required>
           <button id="reset-submit" class="primary-button" type="submit">Send reset link <span aria-hidden="true">→</span></button>
           <button id="back-to-login" class="text-button reset-link" type="button">Back to sign in</button>
@@ -65,7 +65,7 @@
             <div><p class="eyebrow">THE SERVICE PASS</p><h2 id="inbox-heading">Your follow-up list</h2></div>
             <div class="section-actions"><label class="search-box"><span class="sr-only">Search inquiries</span><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Find a caller or event"></label><button id="export-csv" class="outline-button" type="button">Export CSV <span aria-hidden="true">↓</span></button></div>
           </div>
-          <div class="filter-row"><label for="status-filter">Show</label><select id="status-filter"><option value="all">All inquiries</option><option value="New">New</option><option value="Contacted">Contacted</option><option value="Qualified">Qualified</option><option value="Won">Won</option><option value="Lost">Lost</option></select><label class="test-data-toggle"><input id="show-test-data" type="checkbox"> Include test records</label><span id="lead-count-label" class="result-count"></span><button id="refresh-data" class="text-button" type="button">Refresh</button></div>
+          <div class="filter-row"><label for="status-filter">Show</label><select id="status-filter"><option value="all">All inquiries</option><option value="New">New</option><option value="Contacted">Contacted</option><option value="Qualified">Qualified</option><option value="Won">Won</option><option value="Lost">Lost</option><option value="Completed">Completed</option></select><label class="test-data-toggle"><input id="show-test-data" type="checkbox"> Include test records</label><span id="lead-count-label" class="result-count"></span><button id="refresh-data" class="text-button" type="button">Refresh</button></div>
           <div class="table-scroll">
             <table class="lead-table">
               <thead><tr><th scope="col">Caller / event</th><th scope="col">Requested for</th><th scope="col">Party</th><th scope="col">Opportunity</th><th scope="col">Received</th><th scope="col">Follow-up</th></tr></thead>
@@ -73,6 +73,12 @@
             </table>
           </div>
           <div id="lead-empty" class="empty-state" hidden><span class="empty-mark" aria-hidden="true">↳</span><h3>No inquiries in this view</h3><p>New event inquiries will appear here when a caller leaves a callback number.</p></div>
+        </section>
+
+        <section class="desk-section" aria-labelledby="callbacks-heading">
+          <div class="section-head compact-head"><div><p class="eyebrow">CALLBACKS / MANAGER FOLLOW-UP</p><h2 id="callbacks-heading">People waiting to hear back</h2></div><span class="call-log-note">No live transfers. Manager-priority requests are flagged.</span></div>
+          <div class="table-scroll"><table class="lead-table"><thead><tr><th scope="col">Caller / numbers</th><th scope="col">Reason</th><th scope="col">Details</th><th scope="col">Received</th><th scope="col">Follow-up</th></tr></thead><tbody id="callback-rows"></tbody></table></div>
+          <div id="callback-empty" class="empty-state small-empty" hidden><p>No callback requests are waiting in this view.</p></div>
         </section>
 
         <section class="desk-section calls-section" aria-labelledby="calls-heading">
@@ -87,6 +93,6 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js?v=20260926"></script>
-  <script src="desk.js?v=20260930a"></script>
+  <script src="desk.js?v=20260928-callbacks-1"></script>
 </body>
 </html>

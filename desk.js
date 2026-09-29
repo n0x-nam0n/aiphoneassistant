@@ -13,14 +13,17 @@
   const deskMessage = document.querySelector('#desk-message');
   const leadRows = document.querySelector('#lead-rows');
   const callRows = document.querySelector('#call-rows');
+  const callbackRows = document.querySelector('#callback-rows');
   const leadEmpty = document.querySelector('#lead-empty');
   const callEmpty = document.querySelector('#call-empty');
+  const callbackEmpty = document.querySelector('#callback-empty');
   const searchInput = document.querySelector('#search-input');
   const statusFilter = document.querySelector('#status-filter');
   const showTestData = document.querySelector('#show-test-data');
   const resetMessage = document.querySelector('#reset-message');
   const passwordMessage = document.querySelector('#password-message');
   const states = ['New', 'Contacted', 'Qualified', 'Won', 'Lost'];
+  const callbackStates = ['New', 'Contacted', 'Completed'];
   const queryParams = new URLSearchParams(window.location.search);
   const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
   const authMode = queryParams.get('mode');
@@ -31,6 +34,7 @@
   let activeLocation = null;
   let leads = [];
   let calls = [];
+  let callbackRequests = [];
 
   function message(target, value, isError = false) {
     target.textContent = value;
@@ -128,10 +132,12 @@
     const term = searchInput.value.trim().toLocaleLowerCase();
     const selectedStatus = statusFilter.value;
     const includeTest = showTestData.checked;
+    const callById = new Map(calls.map((call) => [call.id, call]));
     const filtered = leads.filter((lead) => {
       if (lead.is_test && !includeTest) return false;
       const matchesStatus = selectedStatus === 'all' || lead.status === selectedStatus;
-      const searchText = [lead.caller_name, lead.caller_phone, lead.caller_email, lead.event_type, lead.notes].join(' ').toLocaleLowerCase();
+      const call = callById.get(lead.call_id);
+      const searchText = [lead.caller_name, lead.caller_phone, call?.source_caller_phone, call?.callback_phone, lead.caller_email, lead.event_type, lead.notes].join(' ').toLocaleLowerCase();
       return matchesStatus && searchText.includes(term);
     });
 
@@ -139,7 +145,16 @@
     filtered.forEach((lead) => {
       const row = document.createElement('tr');
       const caller = document.createElement('td');
-      appendStacked(caller, lead.caller_name || 'Caller', lead.caller_phone, 'caller-name', 'caller-contact');
+      const call = callById.get(lead.call_id);
+      const callerId = call?.source_caller_phone || 'Unavailable';
+      const callback = call?.callback_phone || lead.caller_phone;
+      appendStacked(caller, lead.caller_name || 'Caller', `Caller ID: ${callerId}`, 'caller-name', 'caller-contact');
+      if (callback && callback !== callerId) {
+        const callbackLine = document.createElement('span');
+        callbackLine.className = 'caller-contact';
+        callbackLine.textContent = `Callback: ${callback}`;
+        caller.append(callbackLine);
+      }
       if (lead.caller_email) {
         const email = document.createElement('span');
         email.className = 'caller-contact';
@@ -187,7 +202,9 @@
 
     document.querySelector('#lead-count-label').textContent = `${filtered.length} ${filtered.length === 1 ? 'inquiry' : 'inquiries'}`;
     leadEmpty.hidden = filtered.length > 0;
-    document.querySelector('#new-count').textContent = String(leads.filter((lead) => lead.status === 'New').length);
+    document.querySelector('#new-count').textContent = String(
+      leads.filter((lead) => lead.status === 'New').length + callbackRequests.filter((request) => request.status === 'New').length
+    );
   }
 
   function renderCalls() {
@@ -222,6 +239,79 @@
     monthStart.setDate(1);
     monthStart.setHours(0, 0, 0, 0);
     document.querySelector('#month-count').textContent = String(visibleCalls.filter((call) => new Date(call.created_at) >= monthStart).length);
+  }
+
+  function renderCallbackRequests() {
+    const term = searchInput.value.trim().toLocaleLowerCase();
+    const selectedStatus = statusFilter.value;
+    const filtered = callbackRequests.filter((request) => {
+      if (request.is_test && !showTestData.checked) return false;
+      if (selectedStatus !== 'all' && request.status !== selectedStatus) return false;
+      const searchText = [request.caller_name, request.source_caller_phone, request.callback_phone,
+        request.request_category, request.details, request.source_call_id].join(' ').toLocaleLowerCase();
+      return searchText.includes(term);
+    });
+    callbackRows.replaceChildren();
+    filtered.forEach((request) => {
+      const row = document.createElement('tr');
+      const caller = document.createElement('td');
+      appendStacked(caller, request.caller_name, `Caller ID: ${request.source_caller_phone || 'Unavailable'}`, 'caller-name', 'caller-contact');
+      const callbackLine = document.createElement('span');
+      callbackLine.className = 'caller-contact';
+      callbackLine.textContent = `Callback: ${request.callback_phone || 'Not captured'}`;
+      caller.append(callbackLine);
+      row.append(caller);
+
+      const categoryLabels = { general: 'Callback requested', large_party: 'Large party · manager priority', complaint: 'Major complaint · manager priority', staff_manager: 'Staff request · manager priority' };
+      row.append(makeCell('', categoryLabels[request.request_category] || 'Callback requested'));
+      row.append(makeCell('', request.details));
+      const received = formatDateTime(request.created_at);
+      const receivedCell = document.createElement('td');
+      appendStacked(receivedCell, received.date, received.time, 'table-date', 'table-time');
+      row.append(receivedCell);
+
+      const statusCell = document.createElement('td');
+      const select = document.createElement('select');
+      select.className = 'followup-select';
+      select.setAttribute('aria-label', `Follow-up status for ${request.caller_name}`);
+      select.dataset.status = request.status;
+      callbackStates.forEach((state) => {
+        const option = document.createElement('option');
+        option.value = state;
+        option.textContent = state;
+        option.selected = state === request.status;
+        select.append(option);
+      });
+      select.addEventListener('change', () => updateCallbackStatus(request, select));
+      statusCell.append(select);
+      row.append(statusCell);
+      callbackRows.append(row);
+    });
+    callbackEmpty.hidden = filtered.length > 0;
+    document.querySelector('#new-count').textContent = String(
+      leads.filter((lead) => lead.status === 'New').length + callbackRequests.filter((request) => request.status === 'New').length
+    );
+  }
+
+  async function updateCallbackStatus(request, select) {
+    const oldStatus = request.status;
+    const nextStatus = select.value;
+    select.disabled = true;
+    const { error } = await client.from('callback_requests')
+      .update({ status: nextStatus })
+      .eq('id', request.id)
+      .eq('location_id', activeLocation.id);
+    select.disabled = false;
+    if (error) {
+      select.value = oldStatus;
+      select.dataset.status = oldStatus;
+      message(deskMessage, 'Could not update this callback. Refresh and try again.', true);
+      return;
+    }
+    request.status = nextStatus;
+    select.dataset.status = nextStatus;
+    message(deskMessage, `Callback follow-up status saved as ${nextStatus}.`);
+    renderCallbackRequests();
   }
 
   async function updateLeadStatus(lead, select) {
@@ -262,7 +352,7 @@
     document.querySelector('#location-name').textContent = activeLocation.name;
     document.querySelector('#test-workspace-notice').hidden = !activeLocation.is_test;
     document.querySelector('#account-email').textContent = (await client.auth.getUser()).data.user?.email || '';
-    [leads, calls] = await Promise.all([
+    [leads, calls, callbackRequests] = await Promise.all([
       fetchAllRows(() => client.from('leads')
         .select('id,request_id,call_id,caller_phone,caller_name,caller_email,event_type,event_date,event_time,party_size,budget_amount,budget_currency,notes,status,is_test,created_at')
         .eq('location_id', activeLocation.id)
@@ -270,11 +360,16 @@
       fetchAllRows(() => client.from('calls')
         .select('id,source_call_id,source_caller_phone,callback_phone,started_at,duration_seconds,outcome,transfer_state,is_test,created_at')
         .eq('location_id', activeLocation.id)
+        .order('created_at', { ascending: false })),
+      fetchAllRows(() => client.from('callback_requests')
+        .select('id,request_id,source_call_id,source_caller_phone,caller_name,callback_phone,details,request_category,manager_notification_required,status,is_test,created_at')
+        .eq('location_id', activeLocation.id)
         .order('created_at', { ascending: false }))
     ]);
     renderLeads();
+    renderCallbackRequests();
     renderCalls();
-    message(deskMessage, `${leads.length} inquiries and ${calls.length} calls loaded.`);
+    message(deskMessage, `${leads.length} inquiries, ${callbackRequests.length} callback requests, and ${calls.length} calls loaded.`);
     loginPanel.hidden = true;
     deskContent.hidden = false;
     signOutButton.hidden = false;
@@ -289,11 +384,11 @@
 
   function exportCsv() {
     const callById = new Map(calls.map((call) => [call.id, call]));
-    const headers = ['request_id', 'created_at', 'caller_name', 'caller_phone', 'caller_email', 'event_type', 'event_date', 'event_time', 'party_size', 'budget_amount', 'budget_currency', 'lead_status', 'call_outcome', 'transfer_state', 'notes'];
+    const headers = ['request_id', 'created_at', 'caller_name', 'caller_id', 'callback_phone', 'caller_email', 'event_type', 'event_date', 'event_time', 'party_size', 'budget_amount', 'budget_currency', 'lead_status', 'call_outcome', 'transfer_state', 'notes'];
     const lines = [headers.map(csvValue).join(',')];
     leads.filter((lead) => showTestData.checked || !lead.is_test).forEach((lead) => {
       const call = callById.get(lead.call_id) || {};
-      const values = [lead.request_id, lead.created_at, lead.caller_name, lead.caller_phone, lead.caller_email, lead.event_type, lead.event_date, lead.event_time, lead.party_size, lead.budget_amount, lead.budget_currency, lead.status, call.outcome, call.transfer_state, lead.notes];
+      const values = [lead.request_id, lead.created_at, lead.caller_name, call.source_caller_phone, call.callback_phone || lead.caller_phone, lead.caller_email, lead.event_type, lead.event_date, lead.event_time, lead.party_size, lead.budget_amount, lead.budget_currency, lead.status, call.outcome, call.transfer_state, lead.notes];
       lines.push(values.map(csvValue).join(','));
     });
     const blob = new Blob([`\uFEFF${lines.join('\r\n')}`], { type: 'text/csv;charset=utf-8' });
@@ -357,10 +452,11 @@
       message(deskMessage, 'Could not refresh the restaurant desk. Check your connection and try again.', true);
     }
   });
-  searchInput.addEventListener('input', renderLeads);
-  statusFilter.addEventListener('change', renderLeads);
+  searchInput.addEventListener('input', () => { renderLeads(); renderCallbackRequests(); });
+  statusFilter.addEventListener('change', () => { renderLeads(); renderCallbackRequests(); });
   showTestData.addEventListener('change', () => {
     renderLeads();
+    renderCallbackRequests();
     renderCalls();
   });
   document.querySelector('#export-csv').addEventListener('click', exportCsv);
