@@ -145,7 +145,7 @@
 - [x] Add lead follow-up status updates, search/filter, recent-call log, and CSV export.
 - [x] Restrict authenticated lead updates to status/timestamp columns; keep caller/event details read-only.
 - [x] Escape caller-controlled text through DOM `textContent` and neutralize spreadsheet formula prefixes in CSV output.
-- [ ] Apply the migration to a controlled Supabase project and provision an owner account/membership before calling the portal operational.
+- [x] Apply the migration to the controlled Supabase project and provision the owner account/membership; owner invite acceptance and scoped desk verification remain.
 
 **Exit criterion:** After migration and owner provisioning, an invited owner sees only the assigned organization/location and can update only follow-up status.
 

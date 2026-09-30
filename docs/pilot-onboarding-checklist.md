@@ -13,7 +13,7 @@ Complete one copy per restaurant location. The restaurant contact approves all c
 - [ ] Pilot start/end dates, call coverage windows, usage cap, and overage terms
 - [ ] Create the organization and location through trusted Supabase administration
 - [ ] Disable public account sign-up in Supabase Auth and invite the named owner account through trusted administration
-- [ ] Add the owner to `organization_memberships` through trusted administration and verify the invited account can see only this organization's location
+- [x] Add the owner to `organization_memberships` through trusted administration; invitation accepted and successful sign-in recorded; scoped desk read still needs confirmation
 - [ ] Configure the exact production owner-desk redirect URLs (`desk.html`, `desk.html?mode=reset`, and `desk.html?mode=invite`) in Supabase Auth
 - [ ] Configure production SMTP for owner invitation and password reset email delivery
 
@@ -53,7 +53,7 @@ Complete one copy per restaurant location. The restaurant contact approves all c
 
 ## Handoff and release
 
-- [ ] Staff notification recipients and backup recipient verified
+- [x] Staff notification recipient set to `zachary.estomo@gmail.com`; delivery provider and backup recipient remain to be verified
 - [ ] CSV format and delivery/access owner approved
 - [ ] Existing event CRM and any pilot-specific handoff requirement documented
 - [ ] Acceptance scenarios run against approved test numbers

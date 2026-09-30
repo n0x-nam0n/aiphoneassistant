@@ -1,0 +1,75 @@
+IDEA: Shared operational memory for Preshift, Hostess, and AI Phone
+Captured: September 28, 2026
+Status: Product concept — explore boundaries and validate with operators before implementation.
+
+THE OPPORTUNITY
+
+Connect the AI Phone receptionist to the restaurant’s approved operational memory, so it can answer from current, manager-approved facts and help staff see where callers encounter missing or unclear information. Preshift and Hostess could contribute to a shared knowledge layer while remaining distinct products with different workflows.
+
+CUSTOMER OUTCOME
+
+- The receptionist gives consistent answers grounded in the restaurant’s current approved information.
+- When the information is missing, contradictory, or time-sensitive, it does not guess. It captures the caller’s question and the needed follow-up.
+- Managers can review recurring knowledge gaps and decide whether the operational guidance should change.
+- Once reviewed and approved, an update can improve future calls and shift preparation.
+- The team can assess whether better operational context reduces avoidable callbacks and escalations.
+
+CONCEPTUAL FLOW
+
+Restaurant receives calls
+        ↓
+AI Phone answers using approved restaurant information
+        ↓
+Unanswered or repeatedly unclear questions become review candidates
+        ↓
+Manager reviews and approves, edits, rejects, or defers a candidate
+        ↓
+Approved information becomes available to the appropriate workflows
+        ↓
+Future calls and shift handoffs use the current approved information
+        ↓
+The restaurant reviews whether outcomes improved
+
+PRODUCT BOUNDARY
+
+- AI Phone is the caller-facing channel: answer known questions, collect structured requests, and route follow-up safely.
+- Hostess owns phone operations: calls, caller identity, callback details, handoff status, and call-driven knowledge-gap review.
+- Preshift owns shift-oriented operational context: what the incoming team needs to know and act on.
+- A shared operational-memory capability may connect them, but each product should expose only the information and actions appropriate to its users and workflow.
+- A phone call must not directly change restaurant policy. Caller statements and model-generated suggestions are evidence for review, not approved facts.
+- Sensitive caller data (names, numbers, transcripts, recordings) should not become general operational memory by default. Keep only the minimum evidence needed for an authorized review, with clear retention and access controls.
+
+SAFE FIRST VERSION TO EXPLORE
+
+1. Use manager-approved operational facts as read-only context for the phone agent.
+2. When the agent cannot answer reliably, capture the question or callback request without inventing an answer.
+3. Let authorized managers inspect those gaps in Hostess and optionally carry a concise, privacy-conscious summary into Preshift.
+4. Require explicit manager approval before any candidate becomes reusable guidance.
+5. Make the published fact’s owner, source, approval, effective status, and review/expiry date visible to authorized staff.
+6. Track simple outcomes (for example: whether the question was answered, required a callback, or led to an escalation) without claiming causation prematurely.
+
+QUESTIONS TO RESOLVE BEFORE DESIGN OR BUILD
+
+- Is there one shared fact store with product-specific views, or should Hostess and Preshift sync approved facts across separate stores?
+- Which restaurant, location, role, and product boundaries govern read/write access?
+- Who can propose, approve, publish, expire, or roll back a fact?
+- How should conflicting instructions be surfaced, and which source has precedence?
+- What evidence from calls is retained, for how long, and who can inspect it?
+- How do corrections propagate to the live phone agent, and how can staff verify what version it used for a call?
+- What metrics are useful without overclaiming that memory changes caused operational improvement?
+- What should remain a Preshift-only capability versus a Hostess capability versus shared infrastructure?
+
+POSITIONING / OPSEC
+
+Public-facing promise: “Your team’s approved knowledge helps every caller get a more consistent answer—and important gaps are brought back to the people who can resolve them.”
+
+Keep detailed internal methods private while the product is early: evidence weighting, recurrence thresholds, contradiction/staleness detection, confidence rules, approval transitions, fact versioning, retrieval/ranking, sync payloads, and attribution logic. Describe the customer outcome publicly; keep the implementation recipe in internal product/design documents.
+
+PILOT SUCCESS SIGNALS
+
+- Correct answers to a manager-reviewed set of common restaurant questions.
+- Fewer unsupported answers and fewer unnecessary transfers.
+- Callback requests preserve caller-provided details and state honestly whether staff notification succeeded.
+- Managers can review and correct proposed guidance without changes becoming live automatically.
+- Staff can tell which approved information informed the receptionist and when it was last reviewed.
+- Any reduction in repeat questions or escalations is measured over a suitable period and treated as an observed association until validated.
