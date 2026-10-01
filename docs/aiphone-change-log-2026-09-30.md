@@ -7,7 +7,8 @@ This log records website and repository work published on September 30, 2026. Th
 - Added the real Hostess demo number, `(916) 541-9136`, above the fold with tap-to-call links. The number is also included in the example browser configuration and GitHub Pages configuration generated during deployment.
 - Added the missed event lead calculator. It estimates monthly event leads, bookings, and revenue at risk from missed calls using caller-provided assumptions; the page labels the result as directional.
 - Added the Sacramento Restaurant AI Receptionist page and the Restaurant Phone Response Report, linked from the main site and listed in the sitemap.
-- Reviewed on-page SEO basics: titles, descriptions, canonicals, Open Graph metadata, homepage Organization/Service structured data, internal links, and sitemap coverage are present. This is an SEO foundation, not evidence of search performance. The homepage still needs clearer target-query alignment; the Sacramento page needs verifiable local proof; the report needs original sourced data. Search Console indexing and rankings were not checked.
+- Rewrote the homepage title, description, H1, opening copy, and Service description to clearly target “restaurant AI receptionist” and “AI phone answering service for restaurants.” The copy explains that Hostess handles overflow and after-hours calls and captures event inquiries for staff follow-up; it does not claim to confirm bookings.
+- Reviewed on-page SEO basics: titles, descriptions, canonicals, Open Graph metadata, homepage Organization/Service structured data, internal links, and sitemap coverage are present. This is an SEO foundation, not evidence of search performance. The Sacramento page still needs verifiable local proof; the report needs original sourced data. Search Console indexing, query impressions, and rankings were not checked.
 
 ## Contact and legal pages
 
