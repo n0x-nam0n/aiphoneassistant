@@ -3,6 +3,6 @@
 window.SWITCHBOARD_CONFIG = {
   projectUrl: 'https://frhohipnsqzariwppaxx.supabase.co',
   publishableKey: 'sb_publishable_replace_me',
-  demoPhoneDisplay: '(916) 541-9136',
-  demoPhoneTel: '+19165419136'
+  demoPhoneDisplay: '(916) 545-9316',
+  demoPhoneTel: '+19165459316'
 };

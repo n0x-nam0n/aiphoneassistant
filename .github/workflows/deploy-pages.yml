@@ -27,7 +27,7 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Prepare static site
         run: |
-          printf "window.SWITCHBOARD_CONFIG = { publishableKey: '%s', demoPhoneDisplay: '(916) 541-9136', demoPhoneTel: '+19165419136' };\n" "${{ secrets.SUPABASE_PUBLISHABLE_KEY }}" > config.js
+          printf "window.SWITCHBOARD_CONFIG = { publishableKey: '%s', demoPhoneDisplay: '(916) 545-9316', demoPhoneTel: '+19165459316' };\n" "${{ secrets.SUPABASE_PUBLISHABLE_KEY }}" > config.js
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
