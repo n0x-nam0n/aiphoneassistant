@@ -72,7 +72,9 @@
     @media(max-width:700px){.page{width:min(100% - 32px,1040px)}main{padding:38px 0 52px}.flow{grid-template-columns:1fr 1fr}.preview-grid{grid-template-columns:1fr}.safeguards{grid-template-columns:1fr}.contact{align-items:flex-start;flex-direction:column}.contact .button{width:100%}}
     @media(max-width:420px){.flow{grid-template-columns:1fr}.card-head{align-items:flex-start;flex-direction:column}.card{padding:1.1rem}footer{flex-direction:column}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  .breadcrumbs{margin:0 0 1.4rem;color:var(--muted);font-size:.82rem}.breadcrumbs ol{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:0;padding:0;list-style:none}.breadcrumbs li+li:before{content:"/";margin-right:.5rem;color:var(--muted)}.breadcrumbs a{color:var(--ink);text-underline-offset:.18em}.breadcrumbs a:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:2px}
   </style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://restaurantaireceptionist.com/"},{"@type":"ListItem","position":2,"name":"Sample call handoff","item":"https://restaurantaireceptionist.com/demo.html"}]}</script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -82,6 +84,7 @@
       <a class="back-link" href="index.html">Back to Hostess ↗</a>
     </header>
     <main id="main-content">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li aria-current="page">Demo</li></ol></nav>
       <section class="intro" aria-labelledby="preview-title">
         <div class="eyebrow">Overflow call · sample walkthrough</div>
         <h1 id="preview-title">One missed call. One clear next step.</h1>
