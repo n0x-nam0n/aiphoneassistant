@@ -416,3 +416,12 @@ verify_jwt = false
 
 [functions.submit-callback-request]
 verify_jwt = false
+
+[functions.send-togo-order-email]
+verify_jwt = false
+
+[functions.retry-callback-notification]
+verify_jwt = false
+
+[functions.submit-contact-form]
+verify_jwt = false
