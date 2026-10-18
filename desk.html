@@ -70,7 +70,7 @@
         <section class="desk-section" aria-labelledby="inbox-heading">
           <div class="section-head">
             <div><p class="eyebrow">THE SERVICE PASS</p><h2 id="inbox-heading">Your follow-up list</h2></div>
-            <div class="section-actions"><label class="search-box"><span class="sr-only">Search inquiries</span><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Find a caller or event"></label><button id="export-csv" class="outline-button" type="button">Export CSV <span aria-hidden="true">↓</span></button></div>
+            <div class="section-actions"><label class="search-box"><span class="sr-only">Search this restaurant’s inquiries, callbacks and calls</span><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Search names, phone numbers or details"></label><button id="export-csv" class="outline-button" type="button">Export CSV <span aria-hidden="true">↓</span></button></div>
           </div>
           <div class="filter-row">
             <label for="status-filter">Show</label><select id="status-filter"><option value="all">All statuses</option><option value="New">New</option><option value="Contacted">Contacted</option><option value="Qualified">Qualified</option><option value="Won">Won</option><option value="Lost">Lost</option><option value="Completed">Completed</option></select>
@@ -79,7 +79,7 @@
             <select id="date-filter" aria-label="Filter by received date"><option value="all">Any date</option><option value="today">Today</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select>
             <label class="test-data-toggle"><input id="overdue-filter" type="checkbox"> Overdue</label>
             <label class="test-data-toggle"><input id="email-failed-filter" type="checkbox"> Email failed</label>
-            <label class="test-data-toggle"><input id="show-test-data" type="checkbox"> Include tests</label><span id="lead-count-label" class="result-count"></span><button id="refresh-data" class="text-button" type="button">Refresh</button>
+            <label class="test-data-toggle"><input id="show-test-data" type="checkbox"> Include tests</label><button id="clear-filters" class="text-button" type="button">Clear filters</button><span id="lead-count-label" class="result-count"></span><button id="refresh-data" class="text-button" type="button">Refresh</button>
           </div>
           <div class="table-scroll">
             <table class="lead-table">
@@ -87,13 +87,13 @@
               <tbody id="lead-rows"></tbody>
             </table>
           </div>
-          <div id="lead-empty" class="empty-state" hidden><span class="empty-mark" aria-hidden="true">↳</span><h3>No inquiries in this view</h3><p>New event inquiries will appear here when a caller leaves a callback number.</p></div>
+          <div id="lead-empty" class="empty-state" hidden><span class="empty-mark" aria-hidden="true">↳</span><h3>No event inquiries match this view</h3><p>Try Clear filters or choose another restaurant. Callback requests appear in the section below.</p></div>
         </section>
 
         <section class="desk-section" aria-labelledby="callbacks-heading">
           <div class="section-head compact-head"><div><p class="eyebrow">CALLBACKS / MANAGER FOLLOW-UP</p><h2 id="callbacks-heading">People waiting to hear back</h2></div><span class="call-log-note">No live transfers. Manager-priority requests are flagged.</span></div>
           <div class="table-scroll"><table class="lead-table callback-table"><thead><tr><th scope="col">Caller / numbers</th><th scope="col">Reason</th><th scope="col">Details</th><th scope="col">Received</th><th scope="col">Email delivery</th><th scope="col">Follow-up</th></tr></thead><tbody id="callback-rows"></tbody></table></div>
-          <div id="callback-empty" class="empty-state small-empty" hidden><p>No callback requests are waiting in this view.</p></div>
+          <div id="callback-empty" class="empty-state small-empty" hidden><p>No callbacks match these filters for this restaurant. Try Clear filters or choose another restaurant.</p></div>
         </section>
 
         <section class="desk-section calls-section" aria-labelledby="calls-heading">
@@ -108,6 +108,6 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js?v=20260926"></script>
-  <script src="desk.js?v=20261017-reset-flow-2"></script>
+  <script src="desk.js?v=20261018-search-1"></script>
 </body>
 </html>

@@ -260,14 +260,23 @@
     }
   }
 
+  function matchesSearch(values, phones = []) {
+    const term = searchInput.value.normalize('NFKC').trim().toLocaleLowerCase();
+    if (!term) return true;
+    const text = values.filter(Boolean).join(' ').normalize('NFKC').toLocaleLowerCase();
+    if (text.includes(term)) return true;
+    const digits = term.replace(/\D/g, '');
+    return digits.length >= 3 && /^[+()\d\s.-]+$/.test(term)
+      && phones.some((phone) => String(phone || '').replace(/\D/g, '').includes(digits));
+  }
+
   function renderLeads() {
-    const term = searchInput.value.trim().toLocaleLowerCase();
     const callById = new Map(calls.map((call) => [call.id, call]));
     const filtered = leads.filter((lead) => {
       if (!matchesCommonFilters(lead, 'lead')) return false;
       const call = callById.get(lead.call_id);
-      const searchText = [lead.caller_name, lead.caller_phone, call?.source_caller_phone, call?.callback_phone, lead.caller_email, lead.event_type, lead.notes].join(' ').toLocaleLowerCase();
-      return searchText.includes(term);
+      return matchesSearch([lead.caller_name, lead.caller_phone, call?.source_caller_phone, call?.callback_phone, lead.caller_email, lead.event_type, lead.notes, lead.status, lead.assigned_to, lead.request_id],
+        [lead.caller_phone, call?.source_caller_phone, call?.callback_phone]);
     });
 
     leadRows.replaceChildren();
@@ -327,16 +336,24 @@
       leadRows.append(row);
     });
 
-    document.querySelector('#lead-count-label').textContent = `${filtered.length} ${filtered.length === 1 ? 'inquiry' : 'inquiries'}`;
+    document.querySelector('#lead-count-label').textContent = `${filtered.length} event ${filtered.length === 1 ? 'inquiry' : 'inquiries'}`;
     leadEmpty.hidden = filtered.length > 0;
     document.querySelector('#new-count').textContent = String(
-      leads.filter((lead) => lead.status === 'New').length + callbackRequests.filter((request) => request.status === 'New').length
+      leads.filter((lead) => lead.status === 'New' && (showTestData.checked || !lead.is_test)).length
+      + callbackRequests.filter((request) => request.status === 'New' && (showTestData.checked || !request.is_test)).length
     );
   }
 
   function renderCalls() {
     const visibleCalls = calls.filter((call) => showTestData.checked || !call.is_test);
-    const sortedCalls = visibleCalls.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 12);
+    const matchingCalls = visibleCalls.filter((call) => {
+      const related = [...leads.filter((lead) => lead.call_id === call.id),
+        ...callbackRequests.filter((request) => request.source_call_id === call.source_call_id)];
+      return matchesSearch([call.source_caller_phone, call.callback_phone, call.source_call_id, call.outcome,
+        ...related.flatMap((item) => [item.caller_name, item.details, item.notes])],
+        [call.source_caller_phone, call.callback_phone]);
+    });
+    const sortedCalls = matchingCalls.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 12);
     callRows.replaceChildren();
     sortedCalls.forEach((call) => {
       const row = document.createElement('tr');
@@ -374,12 +391,11 @@
   }
 
   function renderCallbackRequests() {
-    const term = searchInput.value.trim().toLocaleLowerCase();
     const filtered = callbackRequests.filter((request) => {
       if (!matchesCommonFilters(request, 'callback')) return false;
-      const searchText = [request.caller_name, request.source_caller_phone, request.callback_phone,
-        request.request_category, request.details, request.source_call_id].join(' ').toLocaleLowerCase();
-      return searchText.includes(term);
+      return matchesSearch([request.caller_name, request.source_caller_phone, request.callback_phone,
+        request.request_category, request.details, request.source_call_id, request.status, request.assigned_to, request.request_id],
+        [request.source_caller_phone, request.callback_phone]);
     });
     callbackRows.replaceChildren();
     filtered.forEach((request) => {
@@ -452,8 +468,10 @@
       callbackRows.append(row);
     });
     callbackEmpty.hidden = filtered.length > 0;
+    document.querySelector('#lead-count-label').textContent = `${leadRows.children.length} event inquiries · ${filtered.length} callbacks`;
     document.querySelector('#new-count').textContent = String(
-      leads.filter((lead) => lead.status === 'New').length + callbackRequests.filter((request) => request.status === 'New').length
+      leads.filter((lead) => lead.status === 'New' && (showTestData.checked || !lead.is_test)).length
+      + callbackRequests.filter((request) => request.status === 'New' && (showTestData.checked || !request.is_test)).length
     );
   }
 
@@ -599,11 +617,23 @@
     restaurantSelect.disabled = true;
     deskContent.hidden = true;
     message(deskMessage, 'Loading the restaurant desk…');
+    const user = (await client.auth.getUser()).data.user;
+    if (!user) throw new Error('Please sign in again.');
+    const locationStorageKey = `hostess-location:${user.id}`;
+    if (!locationId) {
+      try { locationId = window.localStorage.getItem(locationStorageKey); } catch {}
+    }
     const organizations = await fetchAllRows(() => client.from('organizations').select('id,name').order('id'));
     const locations = await fetchAllRows(() => client.from('locations')
       .select('id,organization_id,name,timezone,is_test').order('name').order('id'));
     if (loadVersion !== deskLoadVersion) return;
     if (!locations.length) throw new Error('No restaurant workspace is assigned to this account.');
+    if (!locations.some((location) => location.id === locationId)) {
+      const { data: recent } = await client.from('callback_requests').select('location_id')
+        .eq('is_test', false).order('created_at', { ascending: false }).limit(1);
+      locationId = recent?.[0]?.location_id;
+    }
+    if (loadVersion !== deskLoadVersion) return;
     const organizationNames = new Map(organizations.map((organization) => [organization.id, organization.name]));
     restaurantSelect.replaceChildren();
     locations.forEach((location) => {
@@ -614,6 +644,7 @@
     });
     activeLocation = locations.find((location) => location.id === locationId) || locations[0];
     restaurantSelect.value = activeLocation.id;
+    try { window.localStorage.setItem(locationStorageKey, activeLocation.id); } catch {}
     document.querySelector('#restaurant-picker').hidden = false;
     const selectedLocationId = activeLocation.id;
     document.querySelector('#location-name').textContent = activeLocation.name;
@@ -728,9 +759,19 @@
     message(loginMessage, 'You are signed out.');
   });
 
-  restaurantSelect.addEventListener('change', async () => {
+  function clearFilters() {
     searchInput.value = '';
-    statusFilter.value = 'all';
+    statusFilter.value = categoryFilter.value = priorityFilter.value = dateFilter.value = 'all';
+    overdueFilter.checked = emailFailedFilter.checked = false;
+  }
+  document.querySelector('#clear-filters').addEventListener('click', () => {
+    clearFilters();
+    renderLeads(); renderCallbackRequests(); renderCalls();
+    message(deskMessage, `Showing all non-filtered records for ${activeLocation?.name || 'this restaurant'}.`);
+  });
+
+  restaurantSelect.addEventListener('change', async () => {
+    clearFilters();
     try {
       await loadDesk(restaurantSelect.value);
     } catch {
@@ -749,7 +790,7 @@
       message(deskMessage, 'Could not refresh the restaurant desk. Check your connection and try again.', true);
     }
   });
-  searchInput.addEventListener('input', () => { renderLeads(); renderCallbackRequests(); });
+  searchInput.addEventListener('input', () => { renderLeads(); renderCallbackRequests(); renderCalls(); });
   statusFilter.addEventListener('change', () => { renderLeads(); renderCallbackRequests(); });
   [categoryFilter, priorityFilter, dateFilter, overdueFilter, emailFailedFilter].forEach((control) => {
     control.addEventListener('change', () => { renderLeads(); renderCallbackRequests(); });
