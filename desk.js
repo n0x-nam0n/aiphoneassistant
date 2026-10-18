@@ -34,7 +34,7 @@
   const authMode = queryParams.get('mode');
   const authType = queryParams.get('type') || hashParams.get('type');
   const isInviteFlow = authMode === 'invite' || authType === 'invite';
-  const isRecoveryFlow = authMode === 'reset' || authType === 'recovery';
+  let isRecoveryFlow = authMode === 'reset' || authType === 'recovery';
   let client = null;
   let activeLocation = null;
   let deskLoadVersion = 0;
@@ -66,6 +66,15 @@
     resetRequestForm.hidden = true;
     newPasswordForm.hidden = true;
     message(loginMessage, value, true);
+  }
+
+  function showRecoveryProblem(value) {
+    loginPanel.hidden = false;
+    deskContent.hidden = true;
+    loginForm.hidden = true;
+    newPasswordForm.hidden = true;
+    resetRequestForm.hidden = false;
+    message(resetMessage, value, true);
   }
 
   function makeCell(className, text) {
@@ -806,6 +815,7 @@
         data: { ...(currentUser?.user_metadata || {}), must_set_password: false }
       });
       if (error) throw error;
+      isRecoveryFlow = false;
       window.history.replaceState(null, document.title, window.location.pathname);
       message(passwordMessage, 'Password saved. Opening your restaurant desk…');
       await loadDesk();
@@ -819,6 +829,7 @@
   if (window.supabase && publishableKey && !publishableKey.includes('replace_me')) {
     client = window.supabase.createClient(supabaseUrl, publishableKey);
     client.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') isRecoveryFlow = true;
       if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && (isInviteFlow || isRecoveryFlow))) {
         showPasswordSetup(isInviteFlow
           ? 'You’re invited to the Hostess desk. Choose a password to continue.'
@@ -827,7 +838,8 @@
     });
     client.auth.getSession().then(async ({ data, error }) => {
       if (error) {
-        if (isInviteFlow) showInviteProblem('This invitation link could not be opened. Request a fresh invitation from your Hostess operator.');
+        if (isRecoveryFlow) showRecoveryProblem('This reset link could not be opened. Enter your email below to request a fresh link.');
+        else if (isInviteFlow) showInviteProblem('This invitation link could not be opened. Request a fresh invitation from your Hostess operator.');
         return;
       }
       if (data.session) {
@@ -847,7 +859,9 @@
           await client.auth.signOut();
           message(loginMessage, loadError.message || 'This account cannot open a restaurant workspace.', true);
         }
-      } else if (isInviteFlow || isRecoveryFlow) {
+      } else if (isRecoveryFlow) {
+        showRecoveryProblem('This password-reset link has expired or has already been used. Enter your email below to request a fresh link, then open the newest email.');
+      } else if (isInviteFlow) {
         showInviteProblem(isInviteFlow
           ? 'Your invitation link is missing or expired. Request a fresh invitation from your Hostess operator.'
           : 'Your password-reset link is missing or expired. Request a new reset link below.');
