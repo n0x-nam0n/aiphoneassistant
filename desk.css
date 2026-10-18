@@ -28,3 +28,43 @@
 .lead-table th:last-child,.lead-table td:last-child{min-width:255px}.callback-table{min-width:1180px}.callback-table th:nth-child(5){width:13%}
 @media(max-width:1080px){.summary-row{grid-template-columns:repeat(4,1fr)}.summary-note{grid-column:1/-1;border-top:1px solid var(--line);max-width:none}.lead-table{min-width:1180px}}
 @media(max-width:700px){.summary-row{grid-template-columns:1fr 1fr}.summary-note{grid-column:1/-1}.filter-row select{max-width:145px}.followup-controls{min-width:215px}}
+
+/* Distinct sections keep event leads, callback work and call history recognizable. */
+.events-section{--section-accent:#a6472b;--section-tint:#f4e3da;--section-border:#dfbaa9}
+.callbacks-section{--section-accent:#365f3e;--section-tint:#e8efe3;--section-border:#b5c9ae}
+.calls-section{--section-accent:#655b4d;--section-tint:#eee9df;--section-border:#d1c8b8}
+.desk-section{border:1px solid var(--section-border);border-left:5px solid var(--section-accent);background:var(--surface);margin:0 0 30px;overflow:hidden}
+.desk-section>.section-head{padding:20px 22px;margin:0;background:var(--section-tint);border-bottom:1px solid var(--section-border)}
+.desk-section .eyebrow{color:var(--section-accent);font-size:.67rem;font-weight:500;letter-spacing:.09em}
+.desk-section .section-head h2{margin:7px 0 0;color:var(--section-accent);font-size:1.4rem}
+.desk-section>.filter-row{padding:14px 20px;margin:0;border-bottom:1px solid var(--section-border);background:var(--surface)}
+.desk-section .table-scroll{border:0}
+.desk-section thead{background:var(--section-tint)}
+.desk-section th{color:var(--section-accent)}
+.desk-section .empty-state{margin:0;padding:28px 22px;border:0;background:transparent}
+.desk-section .empty-mark{color:var(--section-accent)}
+.desk-section .empty-state h3{font-size:1rem}
+.desk-section .call-log-note{color:var(--section-accent);max-width:280px}
+.followup-select[data-status="New"]{background:#fff0d5;color:#75420d;border-color:#c99345}
+.followup-select[data-status="Contacted"],.followup-select[data-status="Qualified"]{background:#f4e3da;color:#a6472b;border-color:#d5a58f}
+.followup-select[data-status="Completed"],.followup-select[data-status="Won"]{background:#e6f1e8;color:#28573a;border-color:#81a98b}
+.followup-select[data-status="Lost"]{background:#edf0f3;color:#4c5967;border-color:#aeb9c3}
+@media(max-width:700px){.desk-section>.section-head{padding:16px 14px}.desk-section>.filter-row{padding:12px 14px}.desk-section .section-head h2{font-size:1.2rem}.desk-section .empty-state{padding:22px 14px}}
+
+/* Match the marketing site's cream, terracotta, sage and editorial typography. */
+:root{--paper:#f8f5ec;--surface:#fbf8f0;--ink:#11151d;--muted:#6c6b68;--line:#dcd7cc;--orange:#c45d3c;--orange-deep:#a6472b;--green:#4c8959;--green-pale:#e8efe3;--display:Georgia,'Times New Roman',serif;--rail:#f0ece1}
+.rail{color:var(--ink);border-right:1px solid var(--line);background-color:var(--rail);background-image:repeating-linear-gradient(90deg,transparent 0 7px,rgba(174,163,140,.08) 8px,transparent 9px)}
+.brand{font:400 1.9rem/1 var(--display);letter-spacing:-.06em}
+.brand-mark{border-color:var(--orange)}.brand-mark:before,.brand-mark:after{background:var(--orange)}
+.rail-label,.rail-bottom{color:var(--muted)}.rail-bottom{border-color:var(--line)}
+.rail-item{background:#f4e3da;color:#8d3d25}.rail-icon{color:var(--orange)}
+h1{font:400 2.1rem/1.1 var(--display);letter-spacing:-.045em}
+.desk-section .section-head h2{font-family:var(--display);font-weight:400;font-size:1.65rem;letter-spacing:-.035em}
+.summary-cell strong{font-family:var(--display);font-weight:400}
+.summary-new{background:#e8efe3}.summary-new strong{color:#365f3e}
+.primary-button{background:var(--orange);border-color:var(--orange);border-radius:6px}
+.primary-button:hover{background:var(--orange-deep)}
+.outline-button{border-color:var(--orange);color:var(--orange-deep);border-radius:6px}
+.search-box,.followup-select{border-radius:6px}.quiet-button{border:1px solid var(--orange);border-radius:24px;padding:8px 14px;color:var(--orange-deep)}
+:where(button,input,select,a):focus-visible{outline:2px solid #365f3e;outline-offset:3px}
+@media(max-width:700px){h1{font-size:1.75rem}.desk-section .section-head h2{font-size:1.4rem}}
