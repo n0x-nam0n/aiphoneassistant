@@ -28,7 +28,7 @@
       </header>
 
       <section id="login-panel" class="login-wrap" aria-labelledby="login-title">
-        <div class="login-copy"><p class="eyebrow">Your team's follow-up desk</p><h2 id="login-title">Every inquiry<br><em>has a next step.</em></h2><p>Sign in to review event calls and update your follow-up list. This space is limited to invited restaurant owners.</p></div>
+        <div class="login-copy"><p class="eyebrow">Your team's follow-up desk</p><h2 id="login-title">Every inquiry<br><em>has a next step.</em></h2><p>Sign in to review event calls and update your follow-up list. This space is limited to invited restaurant owners and authorized operators.</p></div>
         <form id="login-form" class="login-card">
           <label for="login-email">Email</label><input id="login-email" name="email" type="email" autocomplete="username" required>
           <label for="login-password">Password</label><input id="login-password" name="password" type="password" autocomplete="current-password" required>
@@ -53,11 +53,17 @@
         </form>
       </section>
 
+      <div id="restaurant-picker" class="filter-row" hidden>
+        <label for="restaurant-select">Restaurant</label>
+        <select id="restaurant-select" aria-label="Choose restaurant"></select>
+      </div>
       <section id="desk-content" hidden>
         <p id="test-workspace-notice" class="desk-message" hidden>This is a test workspace. Test calls are hidden unless you choose to show them.</p>
         <section class="summary-row" aria-label="Follow-up summary">
           <article class="summary-cell summary-new"><span class="summary-label">Needs follow-up</span><strong id="new-count">—</strong><span>new inquiries</span></article>
           <article class="summary-cell"><span class="summary-label">Calls this month</span><strong id="month-count">—</strong><span>inbound conversations</span></article>
+          <article class="summary-cell"><span class="summary-label">First follow-up</span><strong id="first-followup-average">—</strong><span>average recorded time</span></article>
+          <article class="summary-cell"><span class="summary-label">Outcomes</span><strong id="outcome-count">—</strong><span id="outcome-detail">won / completed</span></article>
           <p class="summary-note">A lead is a request for your team to review. It is not a confirmed event or reservation.</p>
         </section>
 
@@ -66,7 +72,15 @@
             <div><p class="eyebrow">THE SERVICE PASS</p><h2 id="inbox-heading">Your follow-up list</h2></div>
             <div class="section-actions"><label class="search-box"><span class="sr-only">Search inquiries</span><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Find a caller or event"></label><button id="export-csv" class="outline-button" type="button">Export CSV <span aria-hidden="true">↓</span></button></div>
           </div>
-          <div class="filter-row"><label for="status-filter">Show</label><select id="status-filter"><option value="all">All inquiries</option><option value="New">New</option><option value="Contacted">Contacted</option><option value="Qualified">Qualified</option><option value="Won">Won</option><option value="Lost">Lost</option><option value="Completed">Completed</option></select><label class="test-data-toggle"><input id="show-test-data" type="checkbox"> Include test records</label><span id="lead-count-label" class="result-count"></span><button id="refresh-data" class="text-button" type="button">Refresh</button></div>
+          <div class="filter-row">
+            <label for="status-filter">Show</label><select id="status-filter"><option value="all">All statuses</option><option value="New">New</option><option value="Contacted">Contacted</option><option value="Qualified">Qualified</option><option value="Won">Won</option><option value="Lost">Lost</option><option value="Completed">Completed</option></select>
+            <select id="category-filter" aria-label="Filter by category"><option value="all">All categories</option><option value="event">Event inquiries</option><option value="general">General callbacks</option><option value="large_party">Large parties</option><option value="complaint">Complaints</option><option value="staff_manager">Staff / manager</option></select>
+            <select id="priority-filter" aria-label="Filter by priority"><option value="all">All priorities</option><option value="priority">Manager priority</option><option value="standard">Standard</option></select>
+            <select id="date-filter" aria-label="Filter by received date"><option value="all">Any date</option><option value="today">Today</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select>
+            <label class="test-data-toggle"><input id="overdue-filter" type="checkbox"> Overdue</label>
+            <label class="test-data-toggle"><input id="email-failed-filter" type="checkbox"> Email failed</label>
+            <label class="test-data-toggle"><input id="show-test-data" type="checkbox"> Include tests</label><span id="lead-count-label" class="result-count"></span><button id="refresh-data" class="text-button" type="button">Refresh</button>
+          </div>
           <div class="table-scroll">
             <table class="lead-table">
               <thead><tr><th scope="col">Caller / event</th><th scope="col">Requested for</th><th scope="col">Party</th><th scope="col">Opportunity</th><th scope="col">Received</th><th scope="col">Follow-up</th></tr></thead>
@@ -78,7 +92,7 @@
 
         <section class="desk-section" aria-labelledby="callbacks-heading">
           <div class="section-head compact-head"><div><p class="eyebrow">CALLBACKS / MANAGER FOLLOW-UP</p><h2 id="callbacks-heading">People waiting to hear back</h2></div><span class="call-log-note">No live transfers. Manager-priority requests are flagged.</span></div>
-          <div class="table-scroll"><table class="lead-table"><thead><tr><th scope="col">Caller / numbers</th><th scope="col">Reason</th><th scope="col">Details</th><th scope="col">Received</th><th scope="col">Follow-up</th></tr></thead><tbody id="callback-rows"></tbody></table></div>
+          <div class="table-scroll"><table class="lead-table callback-table"><thead><tr><th scope="col">Caller / numbers</th><th scope="col">Reason</th><th scope="col">Details</th><th scope="col">Received</th><th scope="col">Email delivery</th><th scope="col">Follow-up</th></tr></thead><tbody id="callback-rows"></tbody></table></div>
           <div id="callback-empty" class="empty-state small-empty" hidden><p>No callback requests are waiting in this view.</p></div>
         </section>
 
@@ -94,6 +108,6 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js?v=20260926"></script>
-  <script src="desk.js?v=20260928-callbacks-1"></script>
+  <script src="desk.js?v=20261017-master-20261017-console-1"></script>
 </body>
 </html>

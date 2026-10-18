@@ -19,6 +19,11 @@
   const callbackEmpty = document.querySelector('#callback-empty');
   const searchInput = document.querySelector('#search-input');
   const statusFilter = document.querySelector('#status-filter');
+  const categoryFilter = document.querySelector('#category-filter');
+  const priorityFilter = document.querySelector('#priority-filter');
+  const dateFilter = document.querySelector('#date-filter');
+  const overdueFilter = document.querySelector('#overdue-filter');
+  const emailFailedFilter = document.querySelector('#email-failed-filter');
   const showTestData = document.querySelector('#show-test-data');
   const resetMessage = document.querySelector('#reset-message');
   const passwordMessage = document.querySelector('#password-message');
@@ -32,9 +37,13 @@
   const isRecoveryFlow = authMode === 'reset' || authType === 'recovery';
   let client = null;
   let activeLocation = null;
+  let deskLoadVersion = 0;
+  const restaurantSelect = document.querySelector('#restaurant-select');
   let leads = [];
   let calls = [];
   let callbackRequests = [];
+  let callbackNotifications = [];
+  let followupActivities = [];
 
   function message(target, value, isError = false) {
     target.textContent = value;
@@ -104,6 +113,120 @@
     cell.append(first, second);
   }
 
+  function appendPhoneLink(container, label, phone) {
+    const line = document.createElement('span');
+    line.className = 'caller-contact';
+    line.append(`${label}: `);
+    if (phone) {
+      const link = document.createElement('a');
+      link.href = `tel:${phone.replace(/[^+\d]/g, '')}`;
+      link.textContent = phone;
+      line.append(link);
+    } else {
+      line.append('Not captured');
+    }
+    container.append(line);
+  }
+
+  function isOverdue(item) {
+    if (!item.followup_due_at || ['Won', 'Lost', 'Completed'].includes(item.status)) return false;
+    const due = new Date(`${item.followup_due_at}T23:59:59`);
+    return !Number.isNaN(due.getTime()) && due < new Date();
+  }
+
+  function matchesDateFilter(createdAt) {
+    if (dateFilter.value === 'all') return true;
+    const created = new Date(createdAt);
+    if (Number.isNaN(created.getTime())) return false;
+    const now = new Date();
+    if (dateFilter.value === 'today') return created.toDateString() === now.toDateString();
+    const days = Number(dateFilter.value);
+    return created >= new Date(now.getTime() - days * 86400000);
+  }
+
+  function notificationFor(requestId) {
+    return callbackNotifications.find((notification) => notification.callback_request_id === requestId);
+  }
+
+  function matchesCommonFilters(item, type) {
+    if (item.is_test && !showTestData.checked) return false;
+    if (statusFilter.value !== 'all' && item.status !== statusFilter.value) return false;
+    if (!matchesDateFilter(item.created_at)) return false;
+    if (overdueFilter.checked && !isOverdue(item)) return false;
+    const isPriority = type === 'callback' && item.manager_notification_required;
+    if (priorityFilter.value === 'priority' && !isPriority) return false;
+    if (priorityFilter.value === 'standard' && isPriority) return false;
+    if (categoryFilter.value !== 'all') {
+      if (type === 'lead' && categoryFilter.value !== 'event') return false;
+      if (type === 'callback' && categoryFilter.value !== item.request_category) return false;
+    }
+    if (emailFailedFilter.checked) {
+      if (type !== 'callback' || notificationFor(item.id)?.status !== 'failed') return false;
+    }
+    return true;
+  }
+
+  function appendOverdueMarker(cell, item) {
+    if (!isOverdue(item)) return;
+    const marker = document.createElement('span');
+    marker.className = 'overdue-marker';
+    marker.textContent = `Overdue · ${formatEventDate(item.followup_due_at)}`;
+    cell.append(marker);
+  }
+
+  function createFollowupControls(item, type) {
+    const wrap = document.createElement('div');
+    wrap.className = 'followup-controls';
+    const assignment = document.createElement('div');
+    assignment.className = 'assignment-fields';
+    const assignee = document.createElement('input');
+    assignee.type = 'text';
+    assignee.value = item.assigned_to || '';
+    assignee.placeholder = 'Assign to';
+    assignee.setAttribute('aria-label', `Assignee for ${item.caller_name || 'request'}`);
+    const due = document.createElement('input');
+    due.type = 'date';
+    due.value = item.followup_due_at || '';
+    due.setAttribute('aria-label', `Follow-up due date for ${item.caller_name || 'request'}`);
+    assignee.addEventListener('change', () => updateFollowupFields(item, type, assignee, due));
+    due.addEventListener('change', () => updateFollowupFields(item, type, assignee, due));
+    assignment.append(assignee, due);
+
+    const activity = document.createElement('div');
+    activity.className = 'activity-entry';
+    const activityType = document.createElement('select');
+    activityType.setAttribute('aria-label', `Activity type for ${item.caller_name || 'request'}`);
+    [['called', 'Called'], ['left_voicemail', 'Left voicemail'], ['unreachable', 'Unreachable'], ['note', 'Note']].forEach(([value, label]) => {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = label;
+      activityType.append(option);
+    });
+    const note = document.createElement('input');
+    note.type = 'text';
+    note.maxLength = 1000;
+    note.placeholder = 'Optional note';
+    note.setAttribute('aria-label', `Activity note for ${item.caller_name || 'request'}`);
+    const addButton = document.createElement('button');
+    addButton.type = 'button';
+    addButton.className = 'mini-button';
+    addButton.textContent = 'Log';
+    addButton.addEventListener('click', () => logActivity(item, type, activityType, note, addButton));
+    activity.append(activityType, note, addButton);
+    wrap.append(assignment, activity);
+
+    const latest = followupActivities.find((entry) => type === 'lead' ? entry.lead_id === item.id : entry.callback_request_id === item.id);
+    if (latest) {
+      const latestLine = document.createElement('span');
+      latestLine.className = 'latest-activity';
+      const when = formatDateTime(latest.created_at);
+      latestLine.textContent = `${latest.activity_type.replaceAll('_', ' ')} · ${when.date}${latest.notes ? ` · ${latest.notes}` : ''}`;
+      wrap.append(latestLine);
+    }
+    appendOverdueMarker(wrap, item);
+    return wrap;
+  }
+
   async function fetchAllRows(buildQuery) {
     const pageSize = 500;
     const rows = [];
@@ -130,15 +253,12 @@
 
   function renderLeads() {
     const term = searchInput.value.trim().toLocaleLowerCase();
-    const selectedStatus = statusFilter.value;
-    const includeTest = showTestData.checked;
     const callById = new Map(calls.map((call) => [call.id, call]));
     const filtered = leads.filter((lead) => {
-      if (lead.is_test && !includeTest) return false;
-      const matchesStatus = selectedStatus === 'all' || lead.status === selectedStatus;
+      if (!matchesCommonFilters(lead, 'lead')) return false;
       const call = callById.get(lead.call_id);
       const searchText = [lead.caller_name, lead.caller_phone, call?.source_caller_phone, call?.callback_phone, lead.caller_email, lead.event_type, lead.notes].join(' ').toLocaleLowerCase();
-      return matchesStatus && searchText.includes(term);
+      return searchText.includes(term);
     });
 
     leadRows.replaceChildren();
@@ -148,12 +268,10 @@
       const call = callById.get(lead.call_id);
       const callerId = call?.source_caller_phone || 'Unavailable';
       const callback = call?.callback_phone || lead.caller_phone;
-      appendStacked(caller, lead.caller_name || 'Caller', `Caller ID: ${callerId}`, 'caller-name', 'caller-contact');
+      appendStacked(caller, lead.caller_name || 'Caller', '', 'caller-name', 'caller-contact');
+      appendPhoneLink(caller, 'Caller ID', callerId === 'Unavailable' ? null : callerId);
       if (callback && callback !== callerId) {
-        const callbackLine = document.createElement('span');
-        callbackLine.className = 'caller-contact';
-        callbackLine.textContent = `Callback: ${callback}`;
-        caller.append(callbackLine);
+        appendPhoneLink(caller, 'Callback', callback);
       }
       if (lead.caller_email) {
         const email = document.createElement('span');
@@ -195,7 +313,7 @@
         select.append(option);
       });
       select.addEventListener('change', () => updateLeadStatus(lead, select));
-      statusCell.append(select);
+      statusCell.append(select, createFollowupControls(lead, 'lead'));
       row.append(statusCell);
       leadRows.append(row);
     });
@@ -214,7 +332,12 @@
     sortedCalls.forEach((call) => {
       const row = document.createElement('tr');
       const callId = document.createElement('td');
-      appendStacked(callId, `Caller ID: ${call.source_caller_phone || 'Unavailable'}`, `Callback: ${call.callback_phone || 'Not captured'} · ${call.source_call_id}`, 'caller-name', 'call-ref');
+      appendPhoneLink(callId, 'Caller ID', call.source_caller_phone);
+      appendPhoneLink(callId, 'Callback', call.callback_phone);
+      const sourceRef = document.createElement('span');
+      sourceRef.className = 'call-ref';
+      sourceRef.textContent = call.source_call_id;
+      callId.append(sourceRef);
       row.append(callId);
 
       const outcome = document.createElement('td');
@@ -243,10 +366,8 @@
 
   function renderCallbackRequests() {
     const term = searchInput.value.trim().toLocaleLowerCase();
-    const selectedStatus = statusFilter.value;
     const filtered = callbackRequests.filter((request) => {
-      if (request.is_test && !showTestData.checked) return false;
-      if (selectedStatus !== 'all' && request.status !== selectedStatus) return false;
+      if (!matchesCommonFilters(request, 'callback')) return false;
       const searchText = [request.caller_name, request.source_caller_phone, request.callback_phone,
         request.request_category, request.details, request.source_call_id].join(' ').toLocaleLowerCase();
       return searchText.includes(term);
@@ -255,11 +376,9 @@
     filtered.forEach((request) => {
       const row = document.createElement('tr');
       const caller = document.createElement('td');
-      appendStacked(caller, request.caller_name, `Caller ID: ${request.source_caller_phone || 'Unavailable'}`, 'caller-name', 'caller-contact');
-      const callbackLine = document.createElement('span');
-      callbackLine.className = 'caller-contact';
-      callbackLine.textContent = `Callback: ${request.callback_phone || 'Not captured'}`;
-      caller.append(callbackLine);
+      appendStacked(caller, request.caller_name, '', 'caller-name', 'caller-contact');
+      appendPhoneLink(caller, 'Caller ID', request.source_caller_phone);
+      appendPhoneLink(caller, 'Callback', request.callback_phone);
       row.append(caller);
 
       const categoryLabels = { general: 'Callback requested', large_party: 'Large party · manager priority', complaint: 'Major complaint · manager priority', staff_manager: 'Staff request · manager priority' };
@@ -269,6 +388,42 @@
       const receivedCell = document.createElement('td');
       appendStacked(receivedCell, received.date, received.time, 'table-date', 'table-time');
       row.append(receivedCell);
+
+      const notificationCell = document.createElement('td');
+      const notification = notificationFor(request.id);
+      const notificationStatus = document.createElement('span');
+      notificationStatus.className = 'notification-status';
+      notificationStatus.dataset.status = notification?.status || 'unknown';
+      notificationStatus.textContent = notification?.status || 'Unavailable';
+      notificationCell.append(notificationStatus);
+      if (notification) {
+        const detail = document.createElement('span');
+        detail.className = 'notification-detail';
+        const attempted = formatDateTime(notification.last_attempt_at);
+        detail.textContent = `${notification.attempt_count || 0} ${notification.attempt_count === 1 ? 'attempt' : 'attempts'}${notification.last_attempt_at ? ` · ${attempted.date} ${attempted.time}` : ''}`;
+        notificationCell.append(detail);
+        if (notification.last_error_code) {
+          const error = document.createElement('span');
+          error.className = 'notification-error';
+          error.textContent = notification.last_error_code.replaceAll('_', ' ');
+          notificationCell.append(error);
+        }
+        if (notification.provider_message_id) {
+          const providerId = document.createElement('span');
+          providerId.className = 'notification-detail';
+          providerId.textContent = `Provider ID: ${notification.provider_message_id}`;
+          notificationCell.append(providerId);
+        }
+        if (notification.status === 'failed') {
+          const retry = document.createElement('button');
+          retry.type = 'button';
+          retry.className = 'mini-button retry-button';
+          retry.textContent = 'Retry email';
+          retry.addEventListener('click', () => retryCallbackNotification(request, retry));
+          notificationCell.append(retry);
+        }
+      }
+      row.append(notificationCell);
 
       const statusCell = document.createElement('td');
       const select = document.createElement('select');
@@ -283,7 +438,7 @@
         select.append(option);
       });
       select.addEventListener('change', () => updateCallbackStatus(request, select));
-      statusCell.append(select);
+      statusCell.append(select, createFollowupControls(request, 'callback'));
       row.append(statusCell);
       callbackRows.append(row);
     });
@@ -291,6 +446,99 @@
     document.querySelector('#new-count').textContent = String(
       leads.filter((lead) => lead.status === 'New').length + callbackRequests.filter((request) => request.status === 'New').length
     );
+  }
+
+  function renderFollowupMetrics() {
+    const firstByRecord = new Map();
+    followupActivities.forEach((activity) => {
+      const key = activity.lead_id ? `lead:${activity.lead_id}` : `callback:${activity.callback_request_id}`;
+      if (!firstByRecord.has(key) || new Date(activity.created_at) < new Date(firstByRecord.get(key).created_at)) firstByRecord.set(key, activity);
+    });
+    const elapsed = [];
+    leads.forEach((lead) => {
+      const activity = firstByRecord.get(`lead:${lead.id}`);
+      if (activity) elapsed.push(new Date(activity.created_at) - new Date(lead.created_at));
+    });
+    callbackRequests.forEach((request) => {
+      const activity = firstByRecord.get(`callback:${request.id}`);
+      if (activity) elapsed.push(new Date(activity.created_at) - new Date(request.created_at));
+    });
+    const validElapsed = elapsed.filter((value) => Number.isFinite(value) && value >= 0);
+    const averageMs = validElapsed.length ? validElapsed.reduce((sum, value) => sum + value, 0) / validElapsed.length : null;
+    document.querySelector('#first-followup-average').textContent = averageMs == null ? '—' : averageMs < 3600000
+      ? `${Math.max(1, Math.round(averageMs / 60000))}m`
+      : `${Math.round(averageMs / 360000) / 10}h`;
+
+    const won = leads.filter((lead) => lead.status === 'Won').length;
+    const lost = leads.filter((lead) => lead.status === 'Lost').length;
+    const completed = callbackRequests.filter((request) => request.status === 'Completed').length;
+    document.querySelector('#outcome-count').textContent = String(won + completed);
+    document.querySelector('#outcome-detail').textContent = `${won} won · ${completed} callbacks · ${lost} lost`;
+  }
+
+  async function updateFollowupFields(item, type, assignee, due) {
+    assignee.disabled = true;
+    due.disabled = true;
+    const updates = { assigned_to: assignee.value.trim() || null, followup_due_at: due.value || null };
+    const table = type === 'lead' ? 'leads' : 'callback_requests';
+    const { error } = await client.from(table).update(updates).eq('id', item.id).eq('location_id', activeLocation.id);
+    assignee.disabled = false;
+    due.disabled = false;
+    if (error) {
+      assignee.value = item.assigned_to || '';
+      due.value = item.followup_due_at || '';
+      message(deskMessage, 'Could not save the follow-up assignment. Refresh and try again.', true);
+      return;
+    }
+    Object.assign(item, updates);
+    message(deskMessage, 'Follow-up assignment saved.');
+    renderLeads();
+    renderCallbackRequests();
+  }
+
+  async function logActivity(item, type, activityType, note, button) {
+    if (activityType.value === 'note' && !note.value.trim()) {
+      message(deskMessage, 'Add a note before logging a note activity.', true);
+      note.focus();
+      return;
+    }
+    button.disabled = true;
+    const user = (await client.auth.getUser()).data.user;
+    const record = {
+      organization_id: activeLocation.organization_id,
+      location_id: activeLocation.id,
+      lead_id: type === 'lead' ? item.id : null,
+      callback_request_id: type === 'callback' ? item.id : null,
+      activity_type: activityType.value,
+      notes: note.value.trim() || null,
+      created_by: user?.id || null
+    };
+    const { data, error } = await client.from('followup_activities').insert(record).select('id,lead_id,callback_request_id,activity_type,notes,created_by,created_at').single();
+    button.disabled = false;
+    if (error) {
+      message(deskMessage, 'Could not log that activity. Refresh and try again.', true);
+      return;
+    }
+    followupActivities.unshift(data);
+    note.value = '';
+    message(deskMessage, 'Follow-up activity logged.');
+    renderLeads();
+    renderCallbackRequests();
+    renderFollowupMetrics();
+  }
+
+  async function retryCallbackNotification(request, button) {
+    button.disabled = true;
+    button.textContent = 'Retrying…';
+    const { data, error } = await client.functions.invoke('retry-callback-notification', { body: { request_id: request.request_id } });
+    if (error || !data || data.status !== 'sent') {
+      button.disabled = false;
+      button.textContent = 'Retry email';
+      message(deskMessage, 'The email retry failed. The callback remains saved for follow-up.', true);
+      return;
+    }
+    message(deskMessage, 'Callback email sent.');
+    await loadDesk();
   }
 
   async function updateCallbackStatus(request, select) {
@@ -312,6 +560,7 @@
     select.dataset.status = nextStatus;
     message(deskMessage, `Callback follow-up status saved as ${nextStatus}.`);
     renderCallbackRequests();
+    renderFollowupMetrics();
   }
 
   async function updateLeadStatus(lead, select) {
@@ -333,42 +582,63 @@
     select.dataset.status = nextStatus;
     message(deskMessage, `Follow-up status saved as ${nextStatus}.`);
     renderLeads();
+    renderFollowupMetrics();
   }
 
-  async function loadDesk() {
+  async function loadDesk(locationId = activeLocation?.id) {
+    const loadVersion = ++deskLoadVersion;
+    restaurantSelect.disabled = true;
+    deskContent.hidden = true;
     message(deskMessage, 'Loading the restaurant desk…');
-    const { data: organizations, error: orgError } = await client.from('organizations').select('id,name');
-    if (orgError) throw orgError;
-    if (!organizations?.length) throw new Error('No restaurant workspace is assigned to this account.');
-
-    const organizationIds = organizations.map((organization) => organization.id);
-    const { data: locations, error: locationError } = await client.from('locations')
-      .select('id,organization_id,name,timezone,is_test')
-      .in('organization_id', organizationIds);
-    if (locationError) throw locationError;
-    if (locations?.length !== 1) throw new Error('This account must be assigned to exactly one restaurant location. Contact your Hostess operator.');
-
-    activeLocation = locations[0];
+    const organizations = await fetchAllRows(() => client.from('organizations').select('id,name').order('id'));
+    const locations = await fetchAllRows(() => client.from('locations')
+      .select('id,organization_id,name,timezone,is_test').order('name').order('id'));
+    if (loadVersion !== deskLoadVersion) return;
+    if (!locations.length) throw new Error('No restaurant workspace is assigned to this account.');
+    const organizationNames = new Map(organizations.map((organization) => [organization.id, organization.name]));
+    restaurantSelect.replaceChildren();
+    locations.forEach((location) => {
+      const option = document.createElement('option');
+      option.value = location.id;
+      option.textContent = `${organizationNames.get(location.organization_id) || 'Restaurant'} — ${location.name}`;
+      restaurantSelect.append(option);
+    });
+    activeLocation = locations.find((location) => location.id === locationId) || locations[0];
+    restaurantSelect.value = activeLocation.id;
+    document.querySelector('#restaurant-picker').hidden = false;
+    const selectedLocationId = activeLocation.id;
     document.querySelector('#location-name').textContent = activeLocation.name;
     document.querySelector('#test-workspace-notice').hidden = !activeLocation.is_test;
     document.querySelector('#account-email').textContent = (await client.auth.getUser()).data.user?.email || '';
-    [leads, calls, callbackRequests] = await Promise.all([
+    const loadedRows = await Promise.all([
       fetchAllRows(() => client.from('leads')
-        .select('id,request_id,call_id,caller_phone,caller_name,caller_email,event_type,event_date,event_time,party_size,budget_amount,budget_currency,notes,status,is_test,created_at')
-        .eq('location_id', activeLocation.id)
+        .select('id,request_id,call_id,caller_phone,caller_name,caller_email,event_type,event_date,event_time,party_size,budget_amount,budget_currency,notes,status,assigned_to,followup_due_at,is_test,created_at')
+        .eq('location_id', selectedLocationId)
         .order('created_at', { ascending: false })),
       fetchAllRows(() => client.from('calls')
         .select('id,source_call_id,source_caller_phone,callback_phone,started_at,duration_seconds,outcome,transfer_state,is_test,created_at')
-        .eq('location_id', activeLocation.id)
+        .eq('location_id', selectedLocationId)
         .order('created_at', { ascending: false })),
       fetchAllRows(() => client.from('callback_requests')
-        .select('id,request_id,source_call_id,source_caller_phone,caller_name,callback_phone,details,request_category,manager_notification_required,status,is_test,created_at')
-        .eq('location_id', activeLocation.id)
+        .select('id,request_id,source_call_id,source_caller_phone,caller_name,callback_phone,details,request_category,manager_notification_required,status,assigned_to,followup_due_at,is_test,created_at')
+        .eq('location_id', selectedLocationId)
+        .order('created_at', { ascending: false })),
+      fetchAllRows(() => client.from('callback_notifications')
+        .select('id,callback_request_id,status,attempt_count,last_attempt_at,last_error_code,provider_message_id,created_at')
+        .eq('location_id', selectedLocationId)
+        .order('created_at', { ascending: false })),
+      fetchAllRows(() => client.from('followup_activities')
+      .select('id,lead_id,callback_request_id,activity_type,notes,created_by,created_at')
+        .eq('location_id', selectedLocationId)
         .order('created_at', { ascending: false }))
     ]);
+    if (loadVersion !== deskLoadVersion) return;
+    [leads, calls, callbackRequests, callbackNotifications, followupActivities] = loadedRows;
+    restaurantSelect.disabled = false;
     renderLeads();
     renderCallbackRequests();
     renderCalls();
+    renderFollowupMetrics();
     message(deskMessage, `${leads.length} inquiries, ${callbackRequests.length} callback requests, and ${calls.length} calls loaded.`);
     loginPanel.hidden = true;
     deskContent.hidden = false;
@@ -384,11 +654,11 @@
 
   function exportCsv() {
     const callById = new Map(calls.map((call) => [call.id, call]));
-    const headers = ['request_id', 'created_at', 'caller_name', 'caller_id', 'callback_phone', 'caller_email', 'event_type', 'event_date', 'event_time', 'party_size', 'budget_amount', 'budget_currency', 'lead_status', 'call_outcome', 'transfer_state', 'notes'];
+    const headers = ['request_id', 'created_at', 'caller_name', 'caller_id', 'callback_phone', 'caller_email', 'event_type', 'event_date', 'event_time', 'party_size', 'budget_amount', 'budget_currency', 'lead_status', 'assigned_to', 'followup_due_at', 'call_outcome', 'transfer_state', 'notes'];
     const lines = [headers.map(csvValue).join(',')];
     leads.filter((lead) => showTestData.checked || !lead.is_test).forEach((lead) => {
       const call = callById.get(lead.call_id) || {};
-      const values = [lead.request_id, lead.created_at, lead.caller_name, call.source_caller_phone, call.callback_phone || lead.caller_phone, lead.caller_email, lead.event_type, lead.event_date, lead.event_time, lead.party_size, lead.budget_amount, lead.budget_currency, lead.status, call.outcome, call.transfer_state, lead.notes];
+      const values = [lead.request_id, lead.created_at, lead.caller_name, call.source_caller_phone, call.callback_phone || lead.caller_phone, lead.caller_email, lead.event_type, lead.event_date, lead.event_time, lead.party_size, lead.budget_amount, lead.budget_currency, lead.status, lead.assigned_to, lead.followup_due_at, call.outcome, call.transfer_state, lead.notes];
       lines.push(values.map(csvValue).join(','));
     });
     const blob = new Blob([`\uFEFF${lines.join('\r\n')}`], { type: 'text/csv;charset=utf-8' });
@@ -433,7 +703,11 @@
 
   signOutButton.addEventListener('click', async () => {
     await client.auth.signOut();
+    ++deskLoadVersion;
     activeLocation = null;
+    leads = []; calls = []; callbackRequests = []; callbackNotifications = []; followupActivities = [];
+    restaurantSelect.replaceChildren();
+    document.querySelector('#restaurant-picker').hidden = true;
     deskContent.hidden = true;
     loginPanel.hidden = false;
     loginForm.hidden = false;
@@ -445,6 +719,20 @@
     message(loginMessage, 'You are signed out.');
   });
 
+  restaurantSelect.addEventListener('change', async () => {
+    searchInput.value = '';
+    statusFilter.value = 'all';
+    try {
+      await loadDesk(restaurantSelect.value);
+    } catch {
+      deskContent.hidden = false;
+      leads = []; calls = []; callbackRequests = []; callbackNotifications = []; followupActivities = [];
+      renderLeads(); renderCallbackRequests(); renderCalls(); renderFollowupMetrics();
+      restaurantSelect.disabled = false;
+      message(deskMessage, 'Could not load this restaurant. Choose a restaurant or refresh to try again.', true);
+    }
+  });
+
   document.querySelector('#refresh-data').addEventListener('click', async () => {
     try {
       await loadDesk();
@@ -454,6 +742,9 @@
   });
   searchInput.addEventListener('input', () => { renderLeads(); renderCallbackRequests(); });
   statusFilter.addEventListener('change', () => { renderLeads(); renderCallbackRequests(); });
+  [categoryFilter, priorityFilter, dateFilter, overdueFilter, emailFailedFilter].forEach((control) => {
+    control.addEventListener('change', () => { renderLeads(); renderCallbackRequests(); });
+  });
   showTestData.addEventListener('change', () => {
     renderLeads();
     renderCallbackRequests();
