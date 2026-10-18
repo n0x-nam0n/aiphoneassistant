@@ -339,8 +339,7 @@
     document.querySelector('#lead-count-label').textContent = `${filtered.length} event ${filtered.length === 1 ? 'inquiry' : 'inquiries'}`;
     leadEmpty.hidden = filtered.length > 0;
     document.querySelector('#new-count').textContent = String(
-      leads.filter((lead) => lead.status === 'New' && (showTestData.checked || !lead.is_test)).length
-      + callbackRequests.filter((request) => request.status === 'New' && (showTestData.checked || !request.is_test)).length
+      callbackRequests.filter((request) => request.status === 'New' && (showTestData.checked || !request.is_test)).length
     );
   }
 
@@ -470,8 +469,7 @@
     callbackEmpty.hidden = filtered.length > 0;
     document.querySelector('#lead-count-label').textContent = `${leadRows.children.length} event inquiries · ${filtered.length} callbacks`;
     document.querySelector('#new-count').textContent = String(
-      leads.filter((lead) => lead.status === 'New' && (showTestData.checked || !lead.is_test)).length
-      + callbackRequests.filter((request) => request.status === 'New' && (showTestData.checked || !request.is_test)).length
+      callbackRequests.filter((request) => request.status === 'New' && (showTestData.checked || !request.is_test)).length
     );
   }
 
